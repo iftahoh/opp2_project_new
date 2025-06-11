@@ -1,0 +1,7 @@
+﻿#configure_file ("Wall.png" ${CMAKE_BINARY_DIR} COPYONLY)
+configure_file ("assets/images/background.png" ${CMAKE_BINARY_DIR} COPYONLY)
+configure_file ("assets/fonts/arial.ttf" ${CMAKE_BINARY_DIR} COPYONLY)
+configure_file ("assets/images/waccuse.png" ${CMAKE_BINARY_DIR} COPYONLY)
+configure_file ("assets/images/wwalk.png" ${CMAKE_BINARY_DIR} COPYONLY)
+configure_file ("assets/images/text.png" ${CMAKE_BINARY_DIR} COPYONLY)
+configure_file ("assets/images/beach_background.png" ${CMAKE_BINARY_DIR} COPYONLY)
