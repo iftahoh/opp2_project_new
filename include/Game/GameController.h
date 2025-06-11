@@ -6,8 +6,9 @@
 #include <vector>
 #include <memory>
 
-// Forward declaration
+// Forward declarations
 class GameObject;
+class Player; // הוספת Forward Declaration
 
 class GameController {
 public:
@@ -15,8 +16,11 @@ public:
     ~GameController();
     void run();
 
+    // פונקציה ציבורית שתאפשר ל-Player להוסיף אובייקטים
+    void addGameObject(std::unique_ptr<GameObject> object);
+
 private:
-    void handleEvents();
+    void handleEvents(const sf::Event& event);
     void update(sf::Time deltaTime);
     void render();
     void setupWorld();
@@ -24,10 +28,11 @@ private:
     sf::RenderWindow& m_window;
     b2World m_world;
 
-    // וקטור פולימורפי שמחזיק את כל אובייקטי המשחק
     std::vector<std::unique_ptr<GameObject>> m_gameObjects;
+    std::vector<std::unique_ptr<Player>> m_players; // וקטור של שחקנים
+    int m_currentPlayerIndex; // מי השחקן הנוכחי
 
-    // רקע
+    // ... שאר המשתנים נשארים
     sf::Texture m_skyTexture;
     sf::Sprite m_skySprite;
 };
