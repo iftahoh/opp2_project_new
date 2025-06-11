@@ -1,5 +1,6 @@
 #include "Game/Object/Worm.h"
 #include "Game/State/WormIdleState.h"
+#include "Game/CollisionCategories.h"
 #include "box2d/b2_common.h"
 #include <iostream>
 #include <cmath>
@@ -45,6 +46,17 @@ Worm::Worm(b2World& world, const sf::Vector2f& position)
     fixtureDef.shape = &shape;
     fixtureDef.density = 1.0f;
     fixtureDef.friction = 0.5f;
+
+    // ================== הוספת הגדרות הסינון לתולעת ==================
+// 1. קביעת הקטגוריה של התולעת
+    fixtureDef.filter.categoryBits = CATEGORY_WORM;
+
+    // 2. קביעת המסכה - עם מי התולעת יכולה להתנגש
+    // במקרה זה, רק עם האדמה.
+    fixtureDef.filter.maskBits = CATEGORY_TERRAIN;
+    // ===============================================================
+
+
     m_body->CreateFixture(&fixtureDef);
 
     setState(std::make_unique<WormIdleState>());
@@ -144,4 +156,16 @@ void Worm::setState(std::unique_ptr<IWormState> newState) {
 
 void Worm::applyForce(const b2Vec2& force) {
     m_body->ApplyForceToCenter(force, true);
+}
+
+void Worm::setHorizontalVelocity(float vx)
+{
+    // לוקחים את המהירות הנוכחית של הגוף
+    b2Vec2 currentVel = m_body->GetLinearVelocity();
+
+    // משנים רק את הרכיב האופקי (ציר X)
+    currentVel.x = vx;
+
+    // קובעים את המהירות המעודכנת לגוף
+    m_body->SetLinearVelocity(currentVel);
 }

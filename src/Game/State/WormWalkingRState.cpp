@@ -2,33 +2,43 @@
 #include "Game/State/WormIdleState.h"
 #include "Game/Object/Worm.h"
 
+namespace {
+    // קובעים מהירות הליכה קבועה ביחידות של Box2D
+    const float WALK_SPEED = 1.0f;
+}
+
 void WormWalkingRState::onEnter(Worm& worm) {
     worm.setAnimation("walk");
 }
 
 void WormWalkingRState::handleInput(Worm& worm) {
     bool isMoving = false;
+
     if (sf::Keyboard::isKeyPressed(sf::Keyboard::Left)) {
-        worm.applyForce(b2Vec2(-20.0f, 0.0f));
+        // במקום להפעיל כוח, קובעים מהירות קבועה שמאלה
+        worm.setHorizontalVelocity(-WALK_SPEED);
         worm.updateDirection(true);
         isMoving = true;
     }
 
     if (sf::Keyboard::isKeyPressed(sf::Keyboard::Right)) {
-        worm.applyForce(b2Vec2(20.0f, 0.0f));
+        // קובעים מהירות קבועה ימינה
+        worm.setHorizontalVelocity(WALK_SPEED);
         worm.updateDirection(false);
         isMoving = true;
     }
 
     if (!isMoving) {
+        // אם המשתמש לא לוחץ על כלום, עוברים למצב עמידה
         worm.setState(std::make_unique<WormIdleState>());
     }
 }
 
-void WormWalkingRState::update(Worm& worm, sf::Time deltaTime) {}
+void WormWalkingRState::update(Worm& worm, sf::Time deltaTime) {
+    // אין צורך בלוגיקה מיוחדת כאן
+}
 
 void WormWalkingRState::onExit(Worm& worm) {
-    b2Vec2 currentVel = worm.getBody()->GetLinearVelocity();
-    currentVel.x = 0;
-    worm.getBody()->SetLinearVelocity(currentVel);
+    // ביציאה ממצב הליכה, עוצרים את התנועה האופקית לחלוטין
+    worm.setHorizontalVelocity(0.0f);
 }

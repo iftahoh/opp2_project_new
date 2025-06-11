@@ -1,5 +1,6 @@
 // src/GameObjects/Terrain.cpp
 #include "Game/Object/Terrain.h"
+#include "Game/CollisionCategories.h"
 #include <random>
 #include <iostream>
 
@@ -39,6 +40,13 @@ Terrain::Terrain(b2World& world, const sf::Vector2u& windowSize) {
     b2FixtureDef terrainFixtureDef;
     terrainFixtureDef.shape = &terrainShape;
     terrainFixtureDef.friction = 0.6f;
+
+    // ================== הוספת הגדרות הסינון לאדמה ==================
+// 1. קביעת הקטגוריה של האדמה
+    terrainFixtureDef.filter.categoryBits = CATEGORY_TERRAIN;
+    // 2. קביעת מסכה (עם מי היא מתנגשת) - ברירת המחדל היא הכל, וזה בסדר.
+    // terrainFixtureDef.filter.maskBits = ...; 
+    // ===============================================================
     m_body->CreateFixture(&terrainFixtureDef);
 
     // יצירת הייצוג הגרפי

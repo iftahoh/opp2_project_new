@@ -21,6 +21,8 @@ public:
     void applyForce(const b2Vec2& force);
     void updateDirection(bool faceRight);
 
+    void setHorizontalVelocity(float vx);
+
 private:
     void setupAnimations();
     void updateAnimation(sf::Time deltaTime);
