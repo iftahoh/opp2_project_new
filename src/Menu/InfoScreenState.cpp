@@ -1,6 +1,7 @@
 #include "Menu/InfoScreenState.h"
 #include "Menu/MenuManager.h"
 #include "Menu/PopStateCommand.h"
+#include "ResourceGraphic.h"
 #include <iostream>
 
 InfoScreenState::InfoScreenState() : m_isPositionsSet(false) {}
@@ -13,6 +14,7 @@ void InfoScreenState::onEnter(MenuManager* manager) {
     if (!m_font.loadFromFile("arial.ttf")) {
         std::cerr << "Failed to load font in InfoScreenState" << std::endl;
     }
+    m_infoImage = ResourceGraphic::getInstance().getTexture("background_info");
 }
 
 void InfoScreenState::setupPositions(const sf::RenderWindow& window) {
@@ -26,26 +28,8 @@ void InfoScreenState::setupPositions(const sf::RenderWindow& window) {
     float centerX = windowSize.x / 2.f;
 
     // ... (שאר קוד המיקום נשאר אותו דבר)
-    m_titleText.setFont(m_font);
-    m_titleText.setString("Info & Credits");
-    m_titleText.setCharacterSize(48);
-    sf::FloatRect titleBounds = m_titleText.getLocalBounds();
-    m_titleText.setOrigin(titleBounds.left + titleBounds.width / 2.f, titleBounds.top + titleBounds.height / 2.f);
-    m_titleText.setPosition(centerX, windowSize.y * 0.1f);
 
-    std::wstring credits = L"Worms Game\n\n";
-    credits += L"Created by:\n";
-    credits += L"Alexey Laikov\n";
-    credits += L"Talia Barzilai\n";
-    credits += L"Iftah Ohayon\n\n";
-    credits += L"OOP2 Project";
-
-    m_infoText.setFont(m_font);
-    m_infoText.setString(credits);
-    m_infoText.setCharacterSize(24);
-    sf::FloatRect textBounds = m_infoText.getLocalBounds();
-    m_infoText.setOrigin(textBounds.left + textBounds.width / 2.f, textBounds.top + textBounds.height / 2.f);
-    m_infoText.setPosition(centerX, windowSize.y * 0.4f);
+  
 
     sf::Vector2f buttonSize(200.f, 50.f);
     float buttonX = centerX - (buttonSize.x / 2.f);
@@ -58,9 +42,16 @@ void InfoScreenState::render(sf::RenderWindow& window) {
         setupPositions(window);
         m_isPositionsSet = true;
     }
+    sf::Sprite bg;
+    bg.setTexture(m_infoImage);
+    sf::Vector2u textureSize = m_infoImage.getSize();
 
-    window.draw(m_titleText);
-    window.draw(m_infoText);
+    // חישוב קנה מידה - תמלא את כל החלון (גם אם זה מעוות)
+    float scaleX = static_cast<float>(WINDOW_WIDTH) / textureSize.x;
+    float scaleY = static_cast<float>(WINDOW_HEIGHT) / textureSize.y;
+
+    bg.setScale(scaleX, scaleY);
+    window.draw(bg);
     m_backButton.render(window);
 }
 

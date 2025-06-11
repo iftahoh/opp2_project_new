@@ -20,11 +20,7 @@ MainMenuScreenState::MainMenuScreenState() : m_isPositionsSet(false) {
 
 	// הגדרות ראשוניות ללא מיקום
 	background.setTexture(backgroundTexture);
-	titleText.setFont(font);
-	titleText.setString(L"Worms Game");
-	titleText.setCharacterSize(52);
-	titleText.setFillColor(sf::Color::Black);
-	titleText.setStyle(sf::Text::Bold);
+	
 }
 
 // פונקציית העזר החדשה שממרכזת הכל
@@ -38,10 +34,7 @@ void MainMenuScreenState::setupPositions(sf::RenderWindow& window) {
 		windowSize.y / background.getLocalBounds().height
 	);
 
-	// מרכוז הכותרת
-	sf::FloatRect titleBounds = titleText.getLocalBounds();
-	titleText.setOrigin(titleBounds.left + titleBounds.width / 2.f, titleBounds.top + titleBounds.height / 2.f);
-	titleText.setPosition(centerX, windowSize.y * 0.15f);
+	
 
 	// הגדרות כלליות לכפתורים
 	sf::Vector2f buttonSize(250.f, 50.f);
@@ -69,7 +62,6 @@ void MainMenuScreenState::render(sf::RenderWindow& window) {
 
 	// עכשיו נצייר הכל
 	window.draw(background);
-	window.draw(titleText);
 	startGameButton.render(window);
 	settingsButton.render(window);
 	infoButton.render(window);

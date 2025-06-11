@@ -16,8 +16,7 @@ private:
     void setupPositions(const sf::RenderWindow& window);
 
     sf::Font m_font;
-    sf::Text m_infoText;
-    sf::Text m_titleText;
+    sf::Texture m_infoImage;
     Button m_backButton;
     bool m_isPositionsSet;
 };

@@ -1,12 +1,18 @@
+// include/Game/GameController.h
 #pragma once
 
 #include <SFML/Graphics.hpp>
 #include <box2d/box2d.h>
 #include <vector>
+#include <memory>
+
+// Forward declaration
+class GameObject;
 
 class GameController {
 public:
     explicit GameController(sf::RenderWindow& window);
+    ~GameController();
     void run();
 
 private:
@@ -14,23 +20,14 @@ private:
     void update(sf::Time deltaTime);
     void render();
     void setupWorld();
-    void setupGraphics();
-
-    static constexpr float SCALE = 30.0f;
 
     sf::RenderWindow& m_window;
     b2World m_world;
 
-    // Terrain members
-    std::vector<b2Vec2> m_terrainPhysicsVertices;
-    sf::Texture m_terrainTexture;
-    sf::VertexArray m_terrainDrawable;
+    // וקטור פולימורפי שמחזיק את כל אובייקטי המשחק
+    std::vector<std::unique_ptr<GameObject>> m_gameObjects;
 
-    // Ball members
-    b2Body* m_ballBody;
-    sf::CircleShape m_ballShape;
-
-    // === הוספנו משתנים עבור רקע השמיים ===
+    // רקע
     sf::Texture m_skyTexture;
     sf::Sprite m_skySprite;
 };

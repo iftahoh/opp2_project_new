@@ -19,7 +19,6 @@ private:
 	void setupPositions(sf::RenderWindow& window);
 
 	sf::Font font;
-	sf::Text titleText;
 	sf::Texture backgroundTexture;
 	sf::Sprite background;
 
