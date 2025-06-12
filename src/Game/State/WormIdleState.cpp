@@ -1,5 +1,6 @@
 #include "Game/State/WormIdleState.h"
 #include "Game/State/WormWalkingRState.h"
+#include "Game/State/WormJumpState.h"
 #include "Game/Object/Worm.h"
 
 void WormIdleState::onEnter(Worm& worm) {
@@ -13,6 +14,11 @@ void WormIdleState::handleInput(Worm& worm) {
         // אם השחקן לוחץ על מקש תזוזה, עוברים למצב הליכה
         worm.setState(std::make_unique<WormWalkingRState>());
     }
+
+    if (sf::Keyboard::isKeyPressed(sf::Keyboard::Space)) {
+        // אם השחקן לוחץ על מקש תזוזה, אין לוגיקה כל פריים במצב זה
+        worm.setState(std::make_unique<WormJumpState>());
+	}
 }
 
 void WormIdleState::update(Worm& worm, sf::Time deltaTime) {

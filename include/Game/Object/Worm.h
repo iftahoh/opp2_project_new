@@ -21,15 +21,17 @@ public:
     void applyForce(const b2Vec2& force);
     void updateDirection(bool faceRight);
 
+
     void setHorizontalVelocity(float vx);
 
 private:
     void setupAnimations();
     void updateAnimation(sf::Time deltaTime);
     void loadAnimation(const std::string& name, const sf::Texture& texture, int frameCount);
+	int frameNumber(sf::Texture currTexture) const;
 
     std::unique_ptr<IWormState> m_state;
-
+    
     bool m_isFacingRight;
 
     std::map<std::string, std::vector<sf::IntRect>> m_animations;

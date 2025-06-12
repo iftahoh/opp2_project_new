@@ -6,8 +6,6 @@
 #include <cmath>
 
 namespace {
-    const int IDLE_FRAME_COUNT = 6;
-    const int WALK_FRAME_COUNT = 15;
     const float ANIMATION_SPEED_FPS = 12.0f;
 }
 
@@ -25,7 +23,7 @@ Worm::Worm(b2World& world, const sf::Vector2f& position)
     if (!m_walkTexture.loadFromFile("wwalk.png")) {
         std::cerr << "Error loading walk texture" << std::endl;
     }
-
+    
     setupAnimations();
 
     setAnimation("idle");
@@ -74,9 +72,14 @@ void Worm::loadAnimation(const std::string& name, const sf::Texture& texture, in
     m_animations[name] = frames;
 }
 
+int Worm::frameNumber(sf::Texture currTexture) const
+{
+    return currTexture.getSize().y/currTexture.getSize().x;
+}
+
 void Worm::setupAnimations() {
-    loadAnimation("idle", m_idleTexture, IDLE_FRAME_COUNT);
-    loadAnimation("walk", m_walkTexture, WALK_FRAME_COUNT);
+    loadAnimation("idle", m_idleTexture, frameNumber(m_idleTexture));
+    loadAnimation("walk", m_walkTexture, frameNumber(m_walkTexture));
 }
 
 void Worm::setAnimation(const std::string& name) {
@@ -155,7 +158,8 @@ void Worm::setState(std::unique_ptr<IWormState> newState) {
 }
 
 void Worm::applyForce(const b2Vec2& force) {
-    m_body->ApplyForceToCenter(force, true);
+    //m_body->ApplyForceToCenter(force, true);
+	m_body->ApplyLinearImpulse(force, m_body->GetWorldCenter(), true);
 }
 
 void Worm::setHorizontalVelocity(float vx)

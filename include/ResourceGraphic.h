@@ -8,6 +8,7 @@
 #include "Macros.h"
 
 class ResourceGraphic
+
 {
 public:
 	static ResourceGraphic& getInstance();
@@ -21,12 +22,9 @@ public:
 private:
 	ResourceGraphic();
 
-
 	void loadTextures(const std::string& name, const std::string& filename);
 	void loadFonts(const std::string& name, const std::string& filename);
 
 	std::unordered_map<std::string, std::unique_ptr<sf::Texture>> m_textures;
 	std::unordered_map<std::string, std::unique_ptr<sf::Font>> m_fonts;
-
-
 };

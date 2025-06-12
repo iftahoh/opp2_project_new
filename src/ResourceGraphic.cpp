@@ -1,4 +1,6 @@
+
 #include "ResourceGraphic.h"
+
 
 ResourceGraphic& ResourceGraphic::getInstance()
 {

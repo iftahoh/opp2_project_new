@@ -4,7 +4,7 @@
 
 namespace {
     // קובעים מהירות הליכה קבועה ביחידות של Box2D
-    const float WALK_SPEED = 1.0f;
+    const float WALK_SPEED = 0.7f;
 }
 
 void WormWalkingRState::onEnter(Worm& worm) {
