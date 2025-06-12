@@ -23,6 +23,9 @@ Worm::Worm(b2World& world, const sf::Vector2f& position)
     if (!m_walkTexture.loadFromFile("wwalk.png")) {
         std::cerr << "Error loading walk texture" << std::endl;
     }
+    if (!m_jumpTexture.loadFromFile("wjumpu.png")) {
+        std::cerr << "Error loading jump texture" << std::endl;
+	}
     
     setupAnimations();
 
@@ -80,6 +83,7 @@ int Worm::frameNumber(sf::Texture currTexture) const
 void Worm::setupAnimations() {
     loadAnimation("idle", m_idleTexture, frameNumber(m_idleTexture));
     loadAnimation("walk", m_walkTexture, frameNumber(m_walkTexture));
+	loadAnimation("jump", m_jumpTexture, frameNumber(m_jumpTexture));
 }
 
 void Worm::setAnimation(const std::string& name) {
@@ -98,7 +102,12 @@ void Worm::setAnimation(const std::string& name) {
     }
     else if (name == "walk") {
         m_sprite.setTexture(m_walkTexture, true);
-    }
+    }else if (name == "jump") {
+        m_sprite.setTexture(m_jumpTexture, true);
+    } else {
+        std::cerr << "Unknown animation name: " << name << std::endl;
+        return;
+	}
 
     m_currentFrame = 0;
     m_animationTimer = sf::Time::Zero;

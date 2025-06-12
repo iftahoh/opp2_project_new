@@ -1,5 +1,5 @@
-
 #include "ResourceGraphic.h"
+#include <iostream>
 
 
 ResourceGraphic& ResourceGraphic::getInstance()

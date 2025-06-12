@@ -5,11 +5,11 @@
 
 namespace {
     // קובעים מהירות הליכה קבועה ביחידות של Box2D
-    const float JUMP_FORCE = 3.f;
+    const float JUMP_FORCE = 5.f;
 }
 
 void WormJumpState::onEnter(Worm& worm) {
-    //worm.setAnimation("jump");
+    worm.setAnimation("jump");
 }
 
 void WormJumpState::handleInput(Worm& worm) {

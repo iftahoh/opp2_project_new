@@ -43,6 +43,7 @@ private:
 
     sf::Texture m_idleTexture;
     sf::Texture m_walkTexture;
+	sf::Texture m_jumpTexture;
 
     static constexpr float SCALE = 30.0f;
 };
