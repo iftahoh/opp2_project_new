@@ -30,14 +30,27 @@ Player::Player(b2World& world, GameController& gameController, const sf::Vector2
 }
 
 void Player::handleInput(const sf::Event& event) {
-    // החלפת תולעת באמצעות מקש Tab
-    if (event.type == sf::Event::KeyPressed && event.key.code == sf::Keyboard::Tab) {
-        nextWorm();
+    if (event.type == sf::Event::KeyPressed) {
+        if (event.key.code == sf::Keyboard::Tab) {
+            nextWorm();
+            return; // סיימנו לטפל באירוע זה
+        }
+
+        // ----- לוגיקה לבחירת נשק -----
+        if (event.key.code == sf::Keyboard::Num1) {
+            std::cout << "Equipping Bazooka (placeholder)" << std::endl;
+            if (!m_worms.empty()) {
+                // נצטרך ליצור מחלקת Bazooka אמיתית
+                // auto bazooka = std::make_unique<Bazooka>();
+                // m_worms[m_currentWormIndex]->equipWeapon(std::move(bazooka));
+            }
+        }
+        // ... אפשר להוסיף כאן עוד מקשים לנשקים נוספים ...
     }
 
     // העברת קלט לשליטה בתולעת הפעילה
     if (!m_worms.empty()) {
-        m_worms[m_currentWormIndex]->handlePlayerInput();
+        m_worms[m_currentWormIndex]->handlePlayerInput(event);
     }
 }
 

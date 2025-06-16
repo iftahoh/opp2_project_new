@@ -1,5 +1,8 @@
+// src/Game/Object/Worm.cpp
+
 #include "Game/Object/Worm.h"
 #include "Game/State/WormIdleState.h"
+#include "Game/State/WormAimingState.h" // ----- הוספת מצב חדש -----
 #include "Game/CollisionCategories.h"
 #include "box2d/b2_common.h"
 #include <iostream>
@@ -15,8 +18,10 @@ Worm::Worm(b2World& world, const sf::Vector2f& position)
     : m_currentFrame(0),
     m_animationTimer(sf::Time::Zero),
     m_currentAnimation(nullptr),
-    m_isFacingRight(true)
+    m_isFacingRight(true),
+    m_jumpsLeft(MAX_JUMPS) // ----- אתחול מונה הקפיצות -----
 {
+    // ... (קוד טעינת טקסטורות והגדרת אנימציות נשאר כפי שהוא) ...
     if (!m_idleTexture.loadFromFile("wblink1.png")) {
         std::cerr << "Error loading idle texture" << std::endl;
     }
@@ -25,8 +30,8 @@ Worm::Worm(b2World& world, const sf::Vector2f& position)
     }
     if (!m_jumpTexture.loadFromFile("wjumpu.png")) {
         std::cerr << "Error loading jump texture" << std::endl;
-	}
-    
+    }
+
     setupAnimations();
 
     setAnimation("idle");
@@ -48,21 +53,59 @@ Worm::Worm(b2World& world, const sf::Vector2f& position)
     fixtureDef.density = 1.0f;
     fixtureDef.friction = 0.5f;
 
-    // ================== הוספת הגדרות הסינון לתולעת ==================
-// 1. קביעת הקטגוריה של התולעת
     fixtureDef.filter.categoryBits = CATEGORY_WORM;
-
-    // 2. קביעת המסכה - עם מי התולעת יכולה להתנגש
-    // במקרה זה, רק עם האדמה.
     fixtureDef.filter.maskBits = CATEGORY_TERRAIN;
-    // ===============================================================
-
 
     m_body->CreateFixture(&fixtureDef);
 
     setState(std::make_unique<WormIdleState>());
 }
 
+// ----- מימוש פונקציות ניהול קפיצה -----
+bool Worm::canJump() const {
+    return m_jumpsLeft > 0;
+}
+
+void Worm::useJump() {
+    if (canJump()) {
+        m_jumpsLeft--;
+    }
+}
+
+void Worm::resetJumps() {
+    m_jumpsLeft = MAX_JUMPS;
+}
+
+bool Worm::isGrounded() {
+    // נעבור על כל המגעים של התולעת
+    for (b2ContactEdge* edge = m_body->GetContactList(); edge; edge = edge->next) {
+        // נוודא שהמגע פעיל ונוגע
+        if (edge->contact->IsTouching()) {
+
+            b2Fixture* fixtureA = edge->contact->GetFixtureA();
+            b2Fixture* fixtureB = edge->contact->GetFixtureB();
+
+            // נזהה מי מהם הוא ה-fixture של האדמה
+            b2Fixture* otherFixture = nullptr;
+            if (fixtureA->GetBody() == m_body) {
+                otherFixture = fixtureB;
+            }
+            else {
+                otherFixture = fixtureA;
+            }
+
+            // אם ה-fixture השני הוא אדמה, התולעת על הקרקע
+            if (otherFixture->GetFilterData().categoryBits == CATEGORY_TERRAIN) {
+                return true;
+            }
+        }
+    }
+    // אם לא מצאנו שום מגע עם האדמה
+    return false;
+}
+// ----- סוף מימוש פונקציות -----
+
+// ... (שאר הפונקציות כמו loadAnimation, setupAnimations, setAnimation, updateAnimation, updateDirection, render נשארות זהות) ...
 void Worm::loadAnimation(const std::string& name, const sf::Texture& texture, int frameCount) {
     std::vector<sf::IntRect> frames;
     sf::Vector2u textureSize = texture.getSize();
@@ -77,13 +120,13 @@ void Worm::loadAnimation(const std::string& name, const sf::Texture& texture, in
 
 int Worm::frameNumber(sf::Texture currTexture) const
 {
-    return currTexture.getSize().y/currTexture.getSize().x;
+    return currTexture.getSize().y / currTexture.getSize().x;
 }
 
 void Worm::setupAnimations() {
     loadAnimation("idle", m_idleTexture, frameNumber(m_idleTexture));
     loadAnimation("walk", m_walkTexture, frameNumber(m_walkTexture));
-	loadAnimation("jump", m_jumpTexture, frameNumber(m_jumpTexture));
+    loadAnimation("jump", m_jumpTexture, frameNumber(m_jumpTexture));
 }
 
 void Worm::setAnimation(const std::string& name) {
@@ -102,12 +145,14 @@ void Worm::setAnimation(const std::string& name) {
     }
     else if (name == "walk") {
         m_sprite.setTexture(m_walkTexture, true);
-    }else if (name == "jump") {
+    }
+    else if (name == "jump") {
         m_sprite.setTexture(m_jumpTexture, true);
-    } else {
+    }
+    else {
         std::cerr << "Unknown animation name: " << name << std::endl;
         return;
-	}
+    }
 
     m_currentFrame = 0;
     m_animationTimer = sf::Time::Zero;
@@ -142,17 +187,25 @@ void Worm::render(sf::RenderWindow& window) {
     m_sprite.setPosition(currentPos);
 }
 
+
 void Worm::update(sf::Time deltaTime) {
     DynamicObject::update(deltaTime);
     updateAnimation(deltaTime);
+
+    // ----- הוספת איפוס קפיצות בעת נגיעה בקרקע -----
+    if (isGrounded()) {
+        resetJumps();
+    }
+
     if (m_state) {
         m_state->update(*this, deltaTime);
     }
 }
 
-void Worm::handlePlayerInput() {
+// ----- שינוי חתימה כדי לקבל את האירוע -----
+void Worm::handlePlayerInput(const sf::Event& event) {
     if (m_state) {
-        m_state->handleInput(*this);
+        m_state->handleInput(*this, event);
     }
 }
 
@@ -167,18 +220,16 @@ void Worm::setState(std::unique_ptr<IWormState> newState) {
 }
 
 void Worm::applyForce(const b2Vec2& force) {
-    //m_body->ApplyForceToCenter(force, true);
-	m_body->ApplyLinearImpulse(force, m_body->GetWorldCenter(), true);
+    m_body->ApplyLinearImpulse(force, m_body->GetWorldCenter(), true);
 }
 
-void Worm::setHorizontalVelocity(float vx)
-{
-    // לוקחים את המהירות הנוכחית של הגוף
+void Worm::setHorizontalVelocity(float vx) {
     b2Vec2 currentVel = m_body->GetLinearVelocity();
-
-    // משנים רק את הרכיב האופקי (ציר X)
     currentVel.x = vx;
-
-    // קובעים את המהירות המעודכנת לגוף
     m_body->SetLinearVelocity(currentVel);
+}
+
+void Worm::equipWeapon(std::unique_ptr<IWeapon> weapon) {
+    // מעביר את התולעת למצב כיוון עם הנשק שנבחר
+    setState(std::make_unique<WormAimingState>(std::move(weapon)));
 }

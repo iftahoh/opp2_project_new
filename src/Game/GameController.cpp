@@ -64,15 +64,22 @@ void GameController::run() {
             }
         }
 
+        // ----- הסרת הקריאה המיותרת עם אירוע ריק -----
+        // if (!m_players.empty()) {
+        //     m_players[m_currentPlayerIndex]->handleInput(sf::Event{});
+        // }
+        // ----- קריאה עם אירוע ריק נשמרת עבור קלט רציף (הליכה) -----
         if (!m_players.empty()) {
             m_players[m_currentPlayerIndex]->handleInput(sf::Event{});
         }
+
 
         sf::Time deltaTime = clock.restart();
         update(deltaTime);
         render();
     }
 }
+
 
 void GameController::handleEvents(const sf::Event& event) {
     // הפונקציה הזו כרגע לא בשימוש בלולאה הראשית,
