@@ -15,6 +15,10 @@ void GameController::addGameObject(std::unique_ptr<GameObject> object) {
     m_gameObjects.push_back(std::move(object));
 }
 
+b2World& GameController::getWorld() {
+    return m_world;
+}
+
 void GameController::setupWorld() {
     if (!m_skyTexture.loadFromFile("beach_background.png")) {
         std::cerr << "Error loading sky texture" << std::endl;
@@ -24,9 +28,7 @@ void GameController::setupWorld() {
     sf::Vector2u textureSize = m_skyTexture.getSize();
     m_skySprite.setScale((float)windowSize.x / textureSize.x, (float)windowSize.y / textureSize.y);
 
-    m_gameObjects.push_back(std::make_unique<Terrain>(m_world, m_window.getSize()));
-
-    // שימוש במיקום התחלתי נכון (קרוב לאדמה)
+    addGameObject(std::make_unique<Terrain>(m_world, m_window.getSize()));
     m_players.push_back(std::make_unique<Player>(m_world, *this, sf::Vector2f(200.f, 500.f)));
 }
 
@@ -35,8 +37,11 @@ void GameController::update(sf::Time deltaTime) {
     int32 positionIterations = 3;
     m_world.Step(deltaTime.asSeconds(), velocityIterations, positionIterations);
 
-    for (auto& object : m_gameObjects) {
-        object->update(deltaTime);
+    // Update all game objects, including projectiles
+    for (auto it = m_gameObjects.begin(); it != m_gameObjects.end(); ) {
+        (*it)->update(deltaTime);
+        // Optional: Add logic here to remove "dead" objects
+        ++it;
     }
 }
 
@@ -47,6 +52,11 @@ void GameController::render() {
     for (const auto& object : m_gameObjects) {
         object->render(m_window);
     }
+
+    // Player rendering is handled by the GameObjects vector now
+    // if (!m_players.empty()) {
+    //     m_players[m_currentPlayerIndex]->render(m_window);
+    // }
 
     m_window.display();
 }
@@ -64,15 +74,9 @@ void GameController::run() {
             }
         }
 
-        // ----- הסרת הקריאה המיותרת עם אירוע ריק -----
-        // if (!m_players.empty()) {
-        //     m_players[m_currentPlayerIndex]->handleInput(sf::Event{});
-        // }
-        // ----- קריאה עם אירוע ריק נשמרת עבור קלט רציף (הליכה) -----
         if (!m_players.empty()) {
             m_players[m_currentPlayerIndex]->handleInput(sf::Event{});
         }
-
 
         sf::Time deltaTime = clock.restart();
         update(deltaTime);
@@ -80,8 +84,6 @@ void GameController::run() {
     }
 }
 
-
-void GameController::handleEvents(const sf::Event& event) {
-    // הפונקציה הזו כרגע לא בשימוש בלולאה הראשית,
-    // אבל נשאיר אותה למקרה הצורך
+void GameController::handleEvents() {
+    // This is now handled inside run()
 }

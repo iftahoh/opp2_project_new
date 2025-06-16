@@ -1,4 +1,3 @@
-// include/Game/GameController.h
 #pragma once
 
 #include <SFML/Graphics.hpp>
@@ -6,9 +5,8 @@
 #include <vector>
 #include <memory>
 
-// Forward declarations
 class GameObject;
-class Player; // הוספת Forward Declaration
+class Player;
 
 class GameController {
 public:
@@ -16,11 +14,11 @@ public:
     ~GameController();
     void run();
 
-    // פונקציה ציבורית שתאפשר ל-Player להוסיף אובייקטים
     void addGameObject(std::unique_ptr<GameObject> object);
+    b2World& getWorld();
 
 private:
-    void handleEvents(const sf::Event& event);
+    void handleEvents();
     void update(sf::Time deltaTime);
     void render();
     void setupWorld();
@@ -29,10 +27,9 @@ private:
     b2World m_world;
 
     std::vector<std::unique_ptr<GameObject>> m_gameObjects;
-    std::vector<std::unique_ptr<Player>> m_players; // וקטור של שחקנים
-    int m_currentPlayerIndex; // מי השחקן הנוכחי
+    std::vector<std::unique_ptr<Player>> m_players;
+    int m_currentPlayerIndex;
 
-    // ... שאר המשתנים נשארים
     sf::Texture m_skyTexture;
     sf::Sprite m_skySprite;
 };
