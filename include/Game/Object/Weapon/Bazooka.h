@@ -15,4 +15,5 @@ private:
 
     sf::Sprite m_crosshairSprite;
     sf::Texture& m_crosshairTexture;
+	sf::Vector2f m_lastMousePos; // מיקום העכבר האחרון
 };

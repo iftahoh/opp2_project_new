@@ -3,6 +3,7 @@
 #include <SFML/Graphics.hpp>
 #include <box2d/box2d.h>
 #include <vector>
+#include "Game/GameContactListener.h"
 #include <memory>
 
 class GameObject;
@@ -23,6 +24,7 @@ private:
     void render();
     void setupWorld();
 
+    GameContactListener m_contactListener;
     sf::RenderWindow& m_window;
     b2World m_world;
 

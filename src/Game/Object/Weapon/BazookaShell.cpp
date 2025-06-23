@@ -3,14 +3,18 @@
 #include "Game/CollisionCategories.h"
 #include <iostream>
 
-BazookaShell::BazookaShell(b2World& world, const sf::Vector2f& position)
-    : Projectile(world, position)
+BazookaShell::BazookaShell(b2World& world, const sf::Vector2f& position, Worm* owner)
+    : Projectile(world, position, owner)
 {
     m_sprite.setTexture(ResourceGraphic::getInstance().getTexture("missil"));
     m_sprite.setOrigin(m_sprite.getLocalBounds().width / 2.f, m_sprite.getLocalBounds().height / 2.f);
 
     b2BodyDef bodyDef;
     bodyDef.type = b2_dynamicBody;
+    // ================== קוד אבחון - התחל ==================
+    std::cout << "BazookaShell Constructor received pixel position: (" << position.x << ", " << position.y << ")" << std::endl;
+    std::cout << "Setting physics body to meter position: (" << position.x / SCALE << ", " << position.y / SCALE << ")" << std::endl;
+    // ================== קוד אבחון - סוף ===================
     bodyDef.position.Set(position.x / SCALE, position.y / SCALE);
     bodyDef.bullet = true;
     m_body = world.CreateBody(&bodyDef);

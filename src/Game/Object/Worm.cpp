@@ -49,7 +49,8 @@ Worm::Worm(b2World& world, GameController& controller, const sf::Vector2f& posit
 
     b2PolygonShape shape;
     float boxWidth = m_animations.at("idle")[0].width / SCALE;
-    float boxHeight = m_animations.at("idle")[0].height / SCALE;
+	// מכפילים ב0.45 כדי לפצות על הרווח בין התולעת לאדמה
+    float boxHeight = (m_animations.at("idle")[0].height * 0.45) / SCALE;
     shape.SetAsBox(boxWidth / 2.0f, boxHeight / 2.0f);
 
     b2FixtureDef fixtureDef;
@@ -59,6 +60,7 @@ Worm::Worm(b2World& world, GameController& controller, const sf::Vector2f& posit
 
     fixtureDef.filter.categoryBits = CATEGORY_WORM;
     fixtureDef.filter.maskBits = CATEGORY_TERRAIN | CATEGORY_PROJECTILE;
+    
 
     m_body->CreateFixture(&fixtureDef);
     m_body->GetUserData().pointer = reinterpret_cast<uintptr_t>(this);

@@ -3,6 +3,6 @@
 
 class BazookaShell : public Projectile {
 public:
-    BazookaShell(b2World& world, const sf::Vector2f& position);
+    BazookaShell(b2World& world, const sf::Vector2f& position , Worm* owner);
     void onCollision() override;
 };

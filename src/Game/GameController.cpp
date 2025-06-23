@@ -6,6 +6,7 @@
 GameController::GameController(sf::RenderWindow& window)
     : m_window(window), m_world(b2Vec2(0.0f, 9.8f)), m_currentPlayerIndex(0)
 {
+    m_world.SetContactListener(&m_contactListener);
     setupWorld();
 }
 
