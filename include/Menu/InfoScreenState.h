@@ -2,6 +2,7 @@
 
 #include "MenuScreenState.h"
 #include "Button.h"
+#include "Move.h"
 
 class InfoScreenState : public MenuScreenState {
 public:
@@ -18,5 +19,8 @@ private:
     sf::Font m_font;
     sf::Texture m_infoImage;
     Button m_backButton;
+	Move m_nextInfoButton;
+	Move m_previousInfoButton;
     bool m_isPositionsSet;
+	int m_currentInfoIndex;
 };

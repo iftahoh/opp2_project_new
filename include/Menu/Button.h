@@ -16,6 +16,7 @@ public:
 	void handleEvent(const sf::Event& event, sf::RenderWindow& window);
 	void render(sf::RenderWindow& window);
 	bool isMouseOver(sf::RenderWindow& window);
+	sf::Vector2f getposition() const;
 
 private:
 	sf::RectangleShape m_buttonShape;

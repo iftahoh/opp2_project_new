@@ -40,6 +40,11 @@ bool Button::isMouseOver(sf::RenderWindow& window) {
 	return m_buttonShape.getGlobalBounds().contains(worldPos);
 }
 
+sf::Vector2f Button::getposition() const
+{
+	return m_buttonShape.getPosition();
+}
+
 //------------------------------------------------------------------
 void Button::handleEvent(const sf::Event& event, sf::RenderWindow& window) {
 	if (isMouseOver(window)) {

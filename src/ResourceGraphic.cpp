@@ -52,4 +52,5 @@ ResourceGraphic::ResourceGraphic()
         loadTextures(RESOURCES_TEXTURE_PATH[index], RESOURCES_TEXTURE_PATH[index]);
     }
     loadFonts("main_font", "arial");
+	loadFonts("info_font", "info_font");
 }

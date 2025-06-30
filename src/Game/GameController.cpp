@@ -46,22 +46,6 @@ void GameController::update(sf::Time deltaTime) {
     }
 }
 
-void GameController::render() {
-    m_window.clear(sf::Color(135, 206, 235));
-    m_window.draw(m_skySprite);
-
-    for (const auto& object : m_gameObjects) {
-        object->render(m_window);
-    }
-
-    // Player rendering is handled by the GameObjects vector now
-    // if (!m_players.empty()) {
-    //     m_players[m_currentPlayerIndex]->render(m_window);
-    // }
-
-    m_window.display();
-}
-
 void GameController::run() {
     sf::Clock clock;
     while (m_window.isOpen()) {
@@ -87,4 +71,20 @@ void GameController::run() {
 
 void GameController::handleEvents() {
     // This is now handled inside run()
+}
+
+void GameController::render() {
+    m_window.clear(sf::Color(135, 206, 235));
+    m_window.draw(m_skySprite);
+
+    for (const auto& object : m_gameObjects) {
+        object->render(m_window);
+    }
+
+    // Player rendering is handled by the GameObjects vector now
+    // if (!m_players.empty()) {
+    //     m_players[m_currentPlayerIndex]->render(m_window);
+    // }
+
+    m_window.display();
 }

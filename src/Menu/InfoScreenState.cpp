@@ -4,17 +4,16 @@
 #include "ResourceGraphic.h"
 #include <iostream>
 
-InfoScreenState::InfoScreenState() : m_isPositionsSet(false) {}
+InfoScreenState::InfoScreenState() : m_isPositionsSet(false) {
+    m_currentInfoIndex = 1;
+}
 
 // הפונקציה הזו הייתה חסרה! הוסף אותה.
 void InfoScreenState::onEnter(MenuManager* manager) {
     // קריאה לפונקציה של מחלקת האב כדי לשמור את המצביע
     MenuScreenState::onEnter(manager);
-
-    if (!m_font.loadFromFile("arial.ttf")) {
-        std::cerr << "Failed to load font in InfoScreenState" << std::endl;
-    }
-    m_infoImage = ResourceGraphic::getInstance().getTexture("background_info");
+	m_font = ResourceGraphic::getInstance().getFont("info_font");
+    m_infoImage = ResourceGraphic::getInstance().getTexture("background_info1");
 }
 
 void InfoScreenState::setupPositions(const sf::RenderWindow& window) {
@@ -31,10 +30,17 @@ void InfoScreenState::setupPositions(const sf::RenderWindow& window) {
 
   
 
-    sf::Vector2f buttonSize(200.f, 50.f);
+    sf::Vector2f buttonSize(150.f, 50.f);
     float buttonX = centerX - (buttonSize.x / 2.f);
-    m_backButton.setup(L"Back", m_font, { buttonX, windowSize.y * 0.8f }, buttonSize);
+    m_backButton.setup(L"Menu", m_font, { buttonX, (windowSize.y * 0.8f) + 85.f }, buttonSize);
     m_backButton.setCommand(std::make_unique<PopStateCommand>(*m_manager));
+
+	m_nextInfoButton.setup("Next >>",  { buttonX + 270.f, (windowSize.y * 0.8f) - 35.f}, buttonSize , &m_font);
+	m_previousInfoButton.setup("<< Previous", { buttonX - 245.f, (windowSize.y * 0.8f) - 35.f }, buttonSize, &m_font);
+
+ 
+   
+
 }
 
 void InfoScreenState::render(sf::RenderWindow& window) {
@@ -53,10 +59,32 @@ void InfoScreenState::render(sf::RenderWindow& window) {
     bg.setScale(scaleX, scaleY);
     window.draw(bg);
     m_backButton.render(window);
+	m_nextInfoButton.draw(window);
+	m_previousInfoButton.draw(window);
 }
 
 void InfoScreenState::handleInput(sf::Event& event, sf::RenderWindow& window) {
     m_backButton.handleEvent(event, window);
+	sf::Vector2f mousePos = window.mapPixelToCoords(sf::Mouse::getPosition(window));
+    if (m_nextInfoButton.isMouseOver(mousePos)) {
+        if (m_nextInfoButton.isMousePressed(mousePos)) {
+            m_currentInfoIndex++;
+            if (m_currentInfoIndex > 3) { // Assuming there are 3 info screens
+                m_currentInfoIndex = 1;
+            }
+            m_infoImage = ResourceGraphic::getInstance().getTexture("background_info" + std::to_string(m_currentInfoIndex));
+       }
+       
+    } else if (m_previousInfoButton.isMouseOver(mousePos)) {
+        if(m_previousInfoButton.isMousePressed(mousePos)) {
+            m_currentInfoIndex--;
+            if (m_currentInfoIndex < 1) { // Assuming there are 3 info screens
+                m_currentInfoIndex = 3;
+            }
+            m_infoImage = ResourceGraphic::getInstance().getTexture("background_info" + std::to_string(m_currentInfoIndex));
+		}
+	}
+ 
 }
 
 void InfoScreenState::onExit() {
