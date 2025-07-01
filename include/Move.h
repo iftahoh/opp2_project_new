@@ -16,10 +16,13 @@ public:
 		window.draw(m_text);
 	}
 	bool isMouseOver(const sf::Vector2f& mousePosition) const {
-		return m_shape.getGlobalBounds().contains(mousePosition);
+		return m_text.getGlobalBounds().contains(mousePosition);
 	}
 	bool isMousePressed(const sf::Vector2f& mousePosition) const {
 		return isMouseOver(mousePosition) && sf::Mouse::isButtonPressed(sf::Mouse::Left);
+	}
+	void setBold(bool bold) {
+			m_text.setStyle(bold ? sf::Text::Bold : sf::Text::Regular);
 	}
 	void setup(const std::string& name, const sf::Vector2f& position, const sf::Vector2f& size, sf::Font* font) {
 		m_shape.setPosition(position);
@@ -40,5 +43,5 @@ private:
 
 	sf::Color m_defaultColor = sf::Color(255,0,0,0);
 	sf::Color m_hoverColor = sf::Color(150, 150, 150);
-	sf::Color m_textColor = sf::Color::Black;
+	sf::Color m_textColor = sf::Color::White;
 };

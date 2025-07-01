@@ -65,8 +65,11 @@ void InfoScreenState::render(sf::RenderWindow& window) {
 
 void InfoScreenState::handleInput(sf::Event& event, sf::RenderWindow& window) {
     m_backButton.handleEvent(event, window);
+    m_nextInfoButton.setBold(false);
+	m_previousInfoButton.setBold(false);
 	sf::Vector2f mousePos = window.mapPixelToCoords(sf::Mouse::getPosition(window));
     if (m_nextInfoButton.isMouseOver(mousePos)) {
+		m_nextInfoButton.setBold(true);
         if (m_nextInfoButton.isMousePressed(mousePos)) {
             m_currentInfoIndex++;
             if (m_currentInfoIndex > 3) { // Assuming there are 3 info screens
@@ -76,6 +79,7 @@ void InfoScreenState::handleInput(sf::Event& event, sf::RenderWindow& window) {
        }
        
     } else if (m_previousInfoButton.isMouseOver(mousePos)) {
+		m_previousInfoButton.setBold(true);
         if(m_previousInfoButton.isMousePressed(mousePos)) {
             m_currentInfoIndex--;
             if (m_currentInfoIndex < 1) { // Assuming there are 3 info screens
