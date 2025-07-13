@@ -1,24 +1,33 @@
+// src/Game/Object/Weapon/BazookaShell.cpp
+
 #include "Game/Object/Weapon/BazookaShell.h"
 #include "ResourceGraphic.h"
 #include "Game/CollisionCategories.h"
+#include "Game/Object/DynamicObject.h"
+#include "Game/Object/Worm.h" // נוודא שההגדרה של Worm כלולה
 #include <iostream>
 
+// --- הבנאי של הקליע ---
 BazookaShell::BazookaShell(b2World& world, const sf::Vector2f& position, Worm* owner)
-    : Projectile(world, position, owner)
+    : Projectile(world, position, owner),
+    m_explosionTexture(ResourceGraphic::getInstance().getTexture("explosion"))
 {
     m_sprite.setTexture(ResourceGraphic::getInstance().getTexture("missil"));
     m_sprite.setOrigin(m_sprite.getLocalBounds().width / 2.f, m_sprite.getLocalBounds().height / 2.f);
 
+    // --- הגדרת הגוף הפיזיקלי ---
     b2BodyDef bodyDef;
     bodyDef.type = b2_dynamicBody;
-    // ================== קוד אבחון - התחל ==================
-    std::cout << "BazookaShell Constructor received pixel position: (" << position.x << ", " << position.y << ")" << std::endl;
-    std::cout << "Setting physics body to meter position: (" << position.x / SCALE << ", " << position.y / SCALE << ")" << std::endl;
-    // ================== קוד אבחון - סוף ===================
     bodyDef.position.Set(position.x / SCALE, position.y / SCALE);
     bodyDef.bullet = true;
     m_body = world.CreateBody(&bodyDef);
 
+    // ================== תיקון קריטי: אתחול מיקום הספרייט ==================
+    // הגדרת המיקום הראשוני של הספרייט כדי למנוע ממנו להופיע ב-(0,0)
+    m_sprite.setPosition(position);
+    // =====================================================================
+
+    // --- הגדרת צורת ההתנגשות (Fixture) ---
     b2CircleShape shape;
     shape.m_radius = (m_sprite.getTexture()->getSize().y / 2.f) / SCALE;
 
@@ -33,8 +42,50 @@ BazookaShell::BazookaShell(b2World& world, const sf::Vector2f& position, Worm* o
 
     m_body->CreateFixture(&fixtureDef);
     m_body->GetUserData().pointer = reinterpret_cast<uintptr_t>(this);
+
+    m_explosionRect = sf::IntRect(0, 0, 100, 100);
 }
 
+// --- פונקציה שנקראת בעת התנגשות ---
 void BazookaShell::onCollision() {
-    std::cout << "Bazooka Shell Hit!" << std::endl;
+    if (!m_exploding) {
+        m_exploding = true;
+        m_explosionTimer = sf::Time::Zero;
+    }
+}
+
+// --- פונקציית העדכון שרצה בכל פריים ---
+void BazookaShell::update(sf::Time deltaTime) {
+    if (m_exploding) {
+        if (m_body && m_body->GetType() == b2_dynamicBody) {
+            m_body->SetLinearVelocity(b2Vec2(0, 0));
+            m_body->SetType(b2_staticBody);
+        }
+
+        m_explosionTimer += deltaTime;
+        int frame = static_cast<int>(m_explosionTimer.asSeconds() / 0.1f);
+
+        if (frame >= 8) {
+            m_isDead = true;
+        }
+        else {
+            m_explosionRect.left = frame * 100;
+            m_sprite.setTexture(m_explosionTexture);
+            m_sprite.setTextureRect(m_explosionRect);
+            m_sprite.setOrigin(m_explosionRect.width / 2.f, m_explosionRect.height / 2.f);
+        }
+    }
+    else {
+        DynamicObject::update(deltaTime);
+
+        if (m_body && m_body->GetLinearVelocity().LengthSquared() > 0) {
+            float angle = atan2(m_body->GetLinearVelocity().x, -m_body->GetLinearVelocity().y) * 180 / b2_pi;
+            m_sprite.setRotation(angle);
+        }
+    }
+}
+
+// --- פונקציית הציור ---
+void BazookaShell::render(sf::RenderWindow& window) {
+    window.draw(m_sprite);
 }

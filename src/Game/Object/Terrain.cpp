@@ -34,6 +34,12 @@ Terrain::Terrain(b2World& world, const sf::Vector2u& windowSize) {
     groundBodyDef.position.Set(0.0f, 0.0f);
     m_body = world.CreateBody(&groundBodyDef);
 
+    // ============================ התיקון הקריטי כאן ============================
+    // אנחנו חייבים לקשר את המצביע של אובייקט ה-Terrain לגוף הפיזיקלי שלו,
+    // כדי שנוכל לזהות אותו ב-ContactListener.
+    m_body->GetUserData().pointer = reinterpret_cast<uintptr_t>(this);
+    // ========================================================================
+
     b2ChainShape terrainShape;
     terrainShape.CreateLoop(terrainPhysicsVertices.data(), terrainPhysicsVertices.size());
 
@@ -41,12 +47,8 @@ Terrain::Terrain(b2World& world, const sf::Vector2u& windowSize) {
     terrainFixtureDef.shape = &terrainShape;
     terrainFixtureDef.friction = 0.6f;
 
-    // ================== הוספת הגדרות הסינון לאדמה ==================
-// 1. קביעת הקטגוריה של האדמה
     terrainFixtureDef.filter.categoryBits = CATEGORY_TERRAIN;
-    // 2. קביעת מסכה (עם מי היא מתנגשת) - ברירת המחדל היא הכל, וזה בסדר.
-    // terrainFixtureDef.filter.maskBits = ...; 
-    // ===============================================================
+
     m_body->CreateFixture(&terrainFixtureDef);
 
     // יצירת הייצוג הגרפי

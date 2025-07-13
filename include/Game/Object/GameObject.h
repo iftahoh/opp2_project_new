@@ -1,4 +1,4 @@
-// include/GameObjects/GameObject.h
+// include/Game/Object/GameObject.h
 
 #pragma once
 #include <SFML/Graphics.hpp>
@@ -11,6 +11,10 @@ public:
 
     virtual void render(sf::RenderWindow& window) = 0;
     virtual void update(sf::Time deltaTime) = 0;
+
+    // פונקציה וירטואלית שנוספה כדי לבדוק אם האובייקט "מת" ויש להסיר אותו.
+    // ברירת המחדל היא false, ומחלקות יורשות יכולות לממש אותה אחרת.
+    virtual bool isDead() const { return false; }
 
     b2Body* getBody() const { return m_body; }
 

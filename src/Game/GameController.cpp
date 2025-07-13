@@ -38,12 +38,25 @@ void GameController::update(sf::Time deltaTime) {
     int32 positionIterations = 3;
     m_world.Step(deltaTime.asSeconds(), velocityIterations, positionIterations);
 
-    // Update all game objects, including projectiles
-    for (auto it = m_gameObjects.begin(); it != m_gameObjects.end(); ) {
-        (*it)->update(deltaTime);
-        // Optional: Add logic here to remove "dead" objects
-        ++it;
+    // עדכון כל אובייקטי המשחק
+    for (auto& object : m_gameObjects) {
+        object->update(deltaTime);
     }
+
+    // כאן אנו מסירים את כל האובייקטים שסומנו כ"מתים"
+    m_gameObjects.erase(
+        std::remove_if(m_gameObjects.begin(), m_gameObjects.end(),
+            [this](const std::unique_ptr<GameObject>& obj) {
+                if (obj->isDead()) {
+                    // אם לאובייקט יש גוף פיזיקלי, אנו מסירים גם אותו מהעולם של Box2D.
+                    if (obj->getBody()) {
+                        m_world.DestroyBody(obj->getBody());
+                    }
+                    return true; // מסמן שיש להסיר את האובייקט מהווקטור.
+                }
+                return false;
+            }),
+        m_gameObjects.end());
 }
 
 void GameController::run() {

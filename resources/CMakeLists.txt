@@ -14,3 +14,5 @@ configure_file ("assets/images/wbaz.png" ${CMAKE_BINARY_DIR} COPYONLY)
 configure_file ("assets/images/wbazd.png" ${CMAKE_BINARY_DIR} COPYONLY)
 configure_file ("assets/images/missil.png" ${CMAKE_BINARY_DIR} COPYONLY)
 configure_file ("assets/images/crosshair.png" ${CMAKE_BINARY_DIR} COPYONLY)
+configure_file ("assets/images/explosion.png" ${CMAKE_BINARY_DIR} COPYONLY)
+

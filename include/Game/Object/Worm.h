@@ -1,3 +1,5 @@
+// include/Game/Object/Worm.h
+
 #pragma once
 
 #include "Game/Object/DynamicObject.h"
@@ -34,11 +36,17 @@ public:
     GameController& getGameController();
     const sf::Sprite& getSprite() const { return m_sprite; }
 
+    // --- הוספנו פונקציה להורדת חיים ---
+    void takeDamage(int amount);
+
 private:
     void setupAnimations();
     void updateAnimation(sf::Time deltaTime);
     void loadAnimation(const std::string& name, const sf::Texture& texture, int frameCount);
     int frameNumber(sf::Texture currTexture) const;
+
+    // --- הוספנו פונקציה לעדכון מד החיים ---
+    void updateHealthBar();
 
     GameController& m_gameController;
     std::unique_ptr<IWormState> m_state;
@@ -46,6 +54,13 @@ private:
     bool m_isFacingRight;
     int m_jumpsLeft;
     static const int MAX_JUMPS = 2;
+
+    // --- הוספנו משתנים למד החיים ---
+    int m_health;
+    static const int MAX_HEALTH = 100;
+    sf::RectangleShape m_healthBarBackground;
+    sf::RectangleShape m_healthBarForeground;
+    // ------------------------------------
 
     std::map<std::string, std::vector<sf::IntRect>> m_animations;
     const std::vector<sf::IntRect>* m_currentAnimation;

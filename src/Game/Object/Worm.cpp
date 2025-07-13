@@ -1,3 +1,5 @@
+// src/Game/Object/Worm.cpp
+
 #include "Game/Object/Worm.h"
 #include "Game/State/WormIdleState.h"
 #include "Game/State/WormAimingState.h"
@@ -9,6 +11,10 @@
 
 namespace {
     const float ANIMATION_SPEED_FPS = 12.0f;
+    // --- הגדרות חדשות למד החיים ---
+    const sf::Vector2f HEALTH_BAR_SIZE(35.f, 4.f);
+    const float HEALTH_BAR_Y_OFFSET = 20.f; // כמה גבוה מעל התולעת
+    // -----------------------------
 }
 
 const sf::Time Worm::ANIMATION_FRAME_DURATION = sf::seconds(1.f / ANIMATION_SPEED_FPS);
@@ -19,28 +25,20 @@ Worm::Worm(b2World& world, GameController& controller, const sf::Vector2f& posit
     m_currentAnimation(nullptr),
     m_isFacingRight(true),
     m_jumpsLeft(MAX_JUMPS),
-    m_gameController(controller)
+    m_gameController(controller),
+    m_health(MAX_HEALTH) // אתחול חיים למקסימום
 {
-    if (!m_idleTexture.loadFromFile("wblink1.png")) {
-        std::cerr << "Error loading idle texture" << std::endl;
-    }
-    if (!m_walkTexture.loadFromFile("wwalk.png")) {
-        std::cerr << "Error loading walk texture" << std::endl;
-    }
-    if (!m_jumpTexture.loadFromFile("wjumpu.png")) {
-        std::cerr << "Error loading jump texture" << std::endl;
-    }
-    if (!m_bazookaIdleTexture.loadFromFile("wbaz.png")) {
-        std::cerr << "Error loading bazooka idle texture" << std::endl;
-    }
-    if (!m_bazookaAimTexture.loadFromFile("wbazd.png")) {
-        std::cerr << "Error loading bazooka aim texture" << std::endl;
-    }
+    // ... (טעינת טקסטורות והגדרת אנימציות נשאר ללא שינוי) ...
+    if (!m_idleTexture.loadFromFile("wblink1.png")) { std::cerr << "Error loading idle texture" << std::endl; }
+    if (!m_walkTexture.loadFromFile("wwalk.png")) { std::cerr << "Error loading walk texture" << std::endl; }
+    if (!m_jumpTexture.loadFromFile("wjumpu.png")) { std::cerr << "Error loading jump texture" << std::endl; }
+    if (!m_bazookaIdleTexture.loadFromFile("wbaz.png")) { std::cerr << "Error loading bazooka idle texture" << std::endl; }
+    if (!m_bazookaAimTexture.loadFromFile("wbazd.png")) { std::cerr << "Error loading bazooka aim texture" << std::endl; }
 
     setupAnimations();
-
     setAnimation("idle");
 
+    // ... (הגדרת הגוף הפיזיקלי נשאר ללא שינוי) ...
     b2BodyDef bodyDef;
     bodyDef.type = b2_dynamicBody;
     bodyDef.position.Set(position.x / SCALE, position.y / SCALE);
@@ -49,7 +47,6 @@ Worm::Worm(b2World& world, GameController& controller, const sf::Vector2f& posit
 
     b2PolygonShape shape;
     float boxWidth = m_animations.at("idle")[0].width / SCALE;
-	// מכפילים ב0.45 כדי לפצות על הרווח בין התולעת לאדמה
     float boxHeight = (m_animations.at("idle")[0].height * 0.45) / SCALE;
     shape.SetAsBox(boxWidth / 2.0f, boxHeight / 2.0f);
 
@@ -57,15 +54,77 @@ Worm::Worm(b2World& world, GameController& controller, const sf::Vector2f& posit
     fixtureDef.shape = &shape;
     fixtureDef.density = 1.0f;
     fixtureDef.friction = 0.5f;
-
     fixtureDef.filter.categoryBits = CATEGORY_WORM;
     fixtureDef.filter.maskBits = CATEGORY_TERRAIN | CATEGORY_PROJECTILE;
-    
 
     m_body->CreateFixture(&fixtureDef);
     m_body->GetUserData().pointer = reinterpret_cast<uintptr_t>(this);
     setState(std::make_unique<WormIdleState>());
+
+    // --- הגדרות ראשוניות למד החיים ---
+    m_healthBarBackground.setSize(HEALTH_BAR_SIZE);
+    m_healthBarBackground.setFillColor(sf::Color(50, 50, 50)); // רקע אפור כהה
+    m_healthBarBackground.setOrigin(HEALTH_BAR_SIZE.x / 2.f, HEALTH_BAR_SIZE.y / 2.f);
+
+    m_healthBarForeground.setSize(HEALTH_BAR_SIZE);
+    m_healthBarForeground.setFillColor(sf::Color::Red);
+    m_healthBarForeground.setOrigin(0, HEALTH_BAR_SIZE.y / 2.f); // Origin שמאלי כדי שהשינוי בגודל ייראה טוב
+    // ------------------------------------
 }
+
+void Worm::render(sf::RenderWindow& window) {
+    window.draw(m_sprite);
+
+    // --- ציור מד החיים ---
+    window.draw(m_healthBarBackground);
+    window.draw(m_healthBarForeground);
+    // -----------------------
+
+    if (m_state) {
+        m_state->render(window, *this);
+    }
+}
+
+void Worm::update(sf::Time deltaTime) {
+    DynamicObject::update(deltaTime);
+    updateAnimation(deltaTime);
+    updateHealthBar(); // קריאה לעדכון מד החיים בכל פריים
+
+    if (isGrounded()) {
+        resetJumps();
+    }
+    if (m_state) {
+        m_state->update(*this, deltaTime);
+    }
+}
+
+void Worm::takeDamage(int amount) {
+    m_health -= amount;
+    if (m_health < 0) {
+        m_health = 0;
+    }
+    std::cout << "Worm took " << amount << " damage, health is now " << m_health << std::endl;
+    // כאן אפשר להוסיף לוגיקה למות התולעת
+}
+
+void Worm::updateHealthBar() {
+    // מיקום מד החיים מעל ספרייט התולעת
+    sf::Vector2f wormPos = m_sprite.getPosition();
+    m_healthBarBackground.setPosition(wormPos.x, wormPos.y - HEALTH_BAR_Y_OFFSET);
+
+    // עדכון אורך מד החיים האדום בהתאם לכמות החיים
+    float healthPercent = static_cast<float>(m_health) / MAX_HEALTH;
+    m_healthBarForeground.setSize({ HEALTH_BAR_SIZE.x * healthPercent, HEALTH_BAR_SIZE.y });
+
+    // מיקום המד האדום בקצה השמאלי של הרקע שלו
+    m_healthBarForeground.setPosition(m_healthBarBackground.getPosition().x - HEALTH_BAR_SIZE.x / 2.f,
+        m_healthBarBackground.getPosition().y);
+}
+
+// ... שאר הפונקציות של Worm.cpp נשארות ללא שינוי ...
+// (canJump, useJump, resetJumps, isGrounded, getGameController, equipWeapon,
+// loadAnimation, frameNumber, setupAnimations, setAnimation, updateAnimation,
+// updateDirection, handlePlayerInput, setState, applyForce, setHorizontalVelocity)
 
 bool Worm::canJump() const { return m_jumpsLeft > 0; }
 void Worm::useJump() { if (canJump()) m_jumpsLeft--; }
@@ -161,24 +220,6 @@ void Worm::updateDirection(bool faceRight) {
     if (m_isFacingRight != faceRight) {
         m_isFacingRight = faceRight;
         m_sprite.scale(-1.f, 1.f);
-    }
-}
-
-void Worm::render(sf::RenderWindow& window) {
-    window.draw(m_sprite);
-    if (m_state) {
-        m_state->render(window, *this);
-    }
-}
-
-void Worm::update(sf::Time deltaTime) {
-    DynamicObject::update(deltaTime);
-    updateAnimation(deltaTime);
-    if (isGrounded()) {
-        resetJumps();
-    }
-    if (m_state) {
-        m_state->update(*this, deltaTime);
     }
 }
 
