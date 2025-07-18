@@ -1,14 +1,15 @@
-#include "Menu/MainMenuScreenState.h"
+ï»¿#include "Menu/MainMenuScreenState.h"
 #include "Menu/MenuManager.h"
 #include "Menu/StartGameCommand.h"
 #include "Menu/ExitCommand.h"
 #include "Menu/PushStateCommand.h"
 #include "Menu/InfoScreenState.h"
+#include "Menu/SettingsState.h"
 #include <iostream>
 #include <stdexcept>
 #include "ResourceGraphic.h"
 
-// ááğàé, ğèòï ø÷ îùàáéí åğàôñ àú äãâì
+// Ã¡Ã¡Ã°Ã Ã©, Ã°Ã¨Ã²Ã¯ Ã¸Ã· Ã®Ã¹Ã Ã¡Ã©Ã­ Ã¥Ã°Ã Ã´Ã± Ã Ãº Ã¤Ã£Ã¢Ã¬
 MainMenuScreenState::MainMenuScreenState() : m_isPositionsSet(false) {
 	try {
 		font = ResourceGraphic::getInstance().getFont("main_font");
@@ -18,17 +19,17 @@ MainMenuScreenState::MainMenuScreenState() : m_isPositionsSet(false) {
 		std::cerr << "Error: " << e.what() << std::endl;
 	}
 
-	// äâãøåú øàùåğéåú ììà îé÷åí
+	// Ã¤Ã¢Ã£Ã¸Ã¥Ãº Ã¸Ã Ã¹Ã¥Ã°Ã©Ã¥Ãº Ã¬Ã¬Ã  Ã®Ã©Ã·Ã¥Ã­
 	background.setTexture(backgroundTexture);
 	
 }
 
-// ôåğ÷öééú äòæø äçãùä ùîîøëæú äëì
+// Ã´Ã¥Ã°Ã·Ã¶Ã©Ã©Ãº Ã¤Ã²Ã¦Ã¸ Ã¤Ã§Ã£Ã¹Ã¤ Ã¹Ã®Ã®Ã¸Ã«Ã¦Ãº Ã¤Ã«Ã¬
 void MainMenuScreenState::setupPositions(sf::RenderWindow& window) {
 	sf::Vector2f windowSize(window.getSize());
 	float centerX = windowSize.x / 2.f;
 
-	// îøëåæ äø÷ò
+	// Ã®Ã¸Ã«Ã¥Ã¦ Ã¤Ã¸Ã·Ã²
 	background.setScale(
 		windowSize.x / background.getLocalBounds().width,
 		windowSize.y / background.getLocalBounds().height
@@ -36,16 +37,16 @@ void MainMenuScreenState::setupPositions(sf::RenderWindow& window) {
 
 	
 
-	// äâãøåú ëììéåú ìëôúåøéí
+	// Ã¤Ã¢Ã£Ã¸Ã¥Ãº Ã«Ã¬Ã¬Ã©Ã¥Ãº Ã¬Ã«Ã´ÃºÃ¥Ã¸Ã©Ã­
 	sf::Vector2f buttonSize(250.f, 50.f);
 	float buttonX = centerX - (buttonSize.x / 2.f);
 
-	// îé÷åí äëôúåøéí
+	// Ã®Ã©Ã·Ã¥Ã­ Ã¤Ã«Ã´ÃºÃ¥Ã¸Ã©Ã­
 	startGameButton.setup(L"Start Game", font, { buttonX, windowSize.y * 0.40f }, buttonSize);
 	startGameButton.setCommand(std::make_unique<StartGameCommand>(window));
 
 	settingsButton.setup(L"Settings", font, { buttonX, windowSize.y * 0.50f }, buttonSize);
-	// settingsButton.setCommand(...);
+	settingsButton.setCommand(std::make_unique<PushStateCommand<SettingsState>>(*m_manager));
 
 	infoButton.setup(L"Info", font, { buttonX, windowSize.y * 0.60f }, buttonSize);
 	infoButton.setCommand(std::make_unique<PushStateCommand<InfoScreenState>>(*m_manager));
@@ -56,11 +57,11 @@ void MainMenuScreenState::setupPositions(sf::RenderWindow& window) {
 
 void MainMenuScreenState::render(sf::RenderWindow& window) {
 	if (!m_isPositionsSet) {
-		setupPositions(window); // òëùéå ä÷øéàä ú÷éğä
+		setupPositions(window); // Ã²Ã«Ã¹Ã©Ã¥ Ã¤Ã·Ã¸Ã©Ã Ã¤ ÃºÃ·Ã©Ã°Ã¤
 		m_isPositionsSet = true;
 	}
 
-	// òëùéå ğöééø äëì
+	// Ã²Ã«Ã¹Ã©Ã¥ Ã°Ã¶Ã©Ã©Ã¸ Ã¤Ã«Ã¬
 	window.draw(background);
 	startGameButton.render(window);
 	settingsButton.render(window);
@@ -76,11 +77,11 @@ void MainMenuScreenState::handleInput(sf::Event& event, sf::RenderWindow& window
 }
 
 void MainMenuScreenState::onEnter(MenuManager* manager) {
-	// ÷øéàä îôåøùú ìôåğ÷öéä ùì îçì÷ú äàá
-	// æä éáèéç ùäîùúğä m_manager é÷áì àú äòøê äğëåï
+	// Ã·Ã¸Ã©Ã Ã¤ Ã®Ã´Ã¥Ã¸Ã¹Ãº Ã¬Ã´Ã¥Ã°Ã·Ã¶Ã©Ã¤ Ã¹Ã¬ Ã®Ã§Ã¬Ã·Ãº Ã¤Ã Ã¡
+	// Ã¦Ã¤ Ã©Ã¡Ã¨Ã©Ã§ Ã¹Ã¤Ã®Ã¹ÃºÃ°Ã¤ m_manager Ã©Ã·Ã¡Ã¬ Ã Ãº Ã¤Ã²Ã¸Ãª Ã¤Ã°Ã«Ã¥Ã¯
 	MenuScreenState::onEnter(manager);
 }
 
 void MainMenuScreenState::onExit() {
-	// ìåâé÷ä ùøöä áéöéàä îäîñê
+	// Ã¬Ã¥Ã¢Ã©Ã·Ã¤ Ã¹Ã¸Ã¶Ã¤ Ã¡Ã©Ã¶Ã©Ã Ã¤ Ã®Ã¤Ã®Ã±Ãª
 }

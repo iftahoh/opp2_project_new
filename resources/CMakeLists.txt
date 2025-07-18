@@ -8,6 +8,7 @@ configure_file ("assets/images/beach_background.png" ${CMAKE_BINARY_DIR} COPYONL
 configure_file ("assets/images/background_info1.png" ${CMAKE_BINARY_DIR} COPYONLY)
 configure_file ("assets/images/background_info2.png" ${CMAKE_BINARY_DIR} COPYONLY)
 configure_file ("assets/images/background_info3.png" ${CMAKE_BINARY_DIR} COPYONLY)
+configure_file ("assets/images/settings_screen.png" ${CMAKE_BINARY_DIR} COPYONLY)
 configure_file ("assets/images/wblink1.png" ${CMAKE_BINARY_DIR} COPYONLY)
 configure_file ("assets/images/wjumpu.png" ${CMAKE_BINARY_DIR} COPYONLY)
 configure_file ("assets/images/wbaz.png" ${CMAKE_BINARY_DIR} COPYONLY)
@@ -15,4 +16,3 @@ configure_file ("assets/images/wbazd.png" ${CMAKE_BINARY_DIR} COPYONLY)
 configure_file ("assets/images/missil.png" ${CMAKE_BINARY_DIR} COPYONLY)
 configure_file ("assets/images/crosshair.png" ${CMAKE_BINARY_DIR} COPYONLY)
 configure_file ("assets/images/explosion.png" ${CMAKE_BINARY_DIR} COPYONLY)
-

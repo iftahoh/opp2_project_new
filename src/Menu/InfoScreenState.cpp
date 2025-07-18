@@ -1,4 +1,4 @@
-#include "Menu/InfoScreenState.h"
+ï»¿#include "Menu/InfoScreenState.h"
 #include "Menu/MenuManager.h"
 #include "Menu/PopStateCommand.h"
 #include "ResourceGraphic.h"
@@ -8,16 +8,16 @@ InfoScreenState::InfoScreenState() : m_isPositionsSet(false) {
     m_currentInfoIndex = 1;
 }
 
-// äôåğ÷öéä äæå äééúä çñøä! äåñó àåúä.
+// Ã¤Ã´Ã¥Ã°Ã·Ã¶Ã©Ã¤ Ã¤Ã¦Ã¥ Ã¤Ã©Ã©ÃºÃ¤ Ã§Ã±Ã¸Ã¤! Ã¤Ã¥Ã±Ã³ Ã Ã¥ÃºÃ¤.
 void InfoScreenState::onEnter(MenuManager* manager) {
-    // ÷øéàä ìôåğ÷öéä ùì îçì÷ú äàá ëãé ìùîåø àú äîöáéò
+    // Ã·Ã¸Ã©Ã Ã¤ Ã¬Ã´Ã¥Ã°Ã·Ã¶Ã©Ã¤ Ã¹Ã¬ Ã®Ã§Ã¬Ã·Ãº Ã¤Ã Ã¡ Ã«Ã£Ã© Ã¬Ã¹Ã®Ã¥Ã¸ Ã Ãº Ã¤Ã®Ã¶Ã¡Ã©Ã²
     MenuScreenState::onEnter(manager);
 	m_font = ResourceGraphic::getInstance().getFont("info_font");
-    m_infoImage = ResourceGraphic::getInstance().getTexture("background_info1");
+    m_infoImage = ResourceGraphic::getInstance().getTexture("settings_screen");
 }
 
 void InfoScreenState::setupPositions(const sf::RenderWindow& window) {
-    // òëùéå, ëùäôåğ÷öéä äæå úé÷øà, m_manager ëáø éäéä ú÷éï
+    // Ã²Ã«Ã¹Ã©Ã¥, Ã«Ã¹Ã¤Ã´Ã¥Ã°Ã·Ã¶Ã©Ã¤ Ã¤Ã¦Ã¥ ÃºÃ©Ã·Ã¸Ã , m_manager Ã«Ã¡Ã¸ Ã©Ã¤Ã©Ã¤ ÃºÃ·Ã©Ã¯
     if (!m_manager) {
         std::cerr << "FATAL ERROR in InfoScreenState::setupPositions - m_manager is null" << std::endl;
         return;
@@ -26,7 +26,7 @@ void InfoScreenState::setupPositions(const sf::RenderWindow& window) {
     sf::Vector2f windowSize(window.getSize());
     float centerX = windowSize.x / 2.f;
 
-    // ... (ùàø ÷åã äîé÷åí ğùàø àåúå ãáø)
+    // ... (Ã¹Ã Ã¸ Ã·Ã¥Ã£ Ã¤Ã®Ã©Ã·Ã¥Ã­ Ã°Ã¹Ã Ã¸ Ã Ã¥ÃºÃ¥ Ã£Ã¡Ã¸)
 
   
 
@@ -52,7 +52,7 @@ void InfoScreenState::render(sf::RenderWindow& window) {
     bg.setTexture(m_infoImage);
     sf::Vector2u textureSize = m_infoImage.getSize();
 
-    // çéùåá ÷ğä îéãä - úîìà àú ëì äçìåï (âí àí æä îòååú)
+    // Ã§Ã©Ã¹Ã¥Ã¡ Ã·Ã°Ã¤ Ã®Ã©Ã£Ã¤ - ÃºÃ®Ã¬Ã  Ã Ãº Ã«Ã¬ Ã¤Ã§Ã¬Ã¥Ã¯ (Ã¢Ã­ Ã Ã­ Ã¦Ã¤ Ã®Ã²Ã¥Ã¥Ãº)
     float scaleX = static_cast<float>(WINDOW_WIDTH) / textureSize.x;
     float scaleY = static_cast<float>(WINDOW_HEIGHT) / textureSize.y;
 
@@ -92,5 +92,5 @@ void InfoScreenState::handleInput(sf::Event& event, sf::RenderWindow& window) {
 }
 
 void InfoScreenState::onExit() {
-    // ìåâé÷ä ùøöä áéöéàä (àí öøéê)
+    // Ã¬Ã¥Ã¢Ã©Ã·Ã¤ Ã¹Ã¸Ã¶Ã¤ Ã¡Ã©Ã¶Ã©Ã Ã¤ (Ã Ã­ Ã¶Ã¸Ã©Ãª)
 }
