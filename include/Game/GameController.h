@@ -38,5 +38,7 @@ private:
 
 	// --- camera ---
     sf::View m_cameraView;
+
+  
    
 };

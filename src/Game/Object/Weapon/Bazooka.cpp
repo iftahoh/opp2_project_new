@@ -1,4 +1,4 @@
-// src/Game/Object/Weapon/Bazooka.cpp
+ο»Ώ// src/Game/Object/Weapon/Bazooka.cpp
 
 #include "Game/Object/Weapon/Bazooka.h"
 #include "Game/Object/Worm.h"
@@ -9,8 +9,8 @@
 #include <iostream>
 
 namespace {
-    const float FIRE_POWER = 15.f;
-    // δβγμπε ΰϊ δξψηχ δδϊημϊι ωμ δχμις μ-40 τιχρμιν (αξχεν 30)
+    const float FIRE_POWER = 30.f;
+    // Γ¤ΓΆΓ£Γ¬Γ°Γ¥ Γ ΓΊ Γ¤Γ®ΓΈΓ§Γ· Γ¤Γ¤ΓΊΓ§Γ¬ΓΊΓ© ΓΉΓ¬ Γ¤Γ·Γ¬Γ©Γ² Γ¬-40 Γ΄Γ©Γ·Γ±Γ¬Γ©Γ­ (Γ΅Γ®Γ·Γ¥Γ­ 30)
     const float SPAWN_OFFSET = 40.f;
 }
 
@@ -53,7 +53,7 @@ void Bazooka::fire(Worm& worm) {
     if (length == 0) return;
     dir /= length;
 
-    // ιεφψιν ΰϊ δχμις αξιχεν ηγω εξψεηχ ιεϊψ
+    // Γ©Γ¥Γ¶ΓΈΓ©Γ­ Γ ΓΊ Γ¤Γ·Γ¬Γ©Γ² Γ΅Γ®Γ©Γ·Γ¥Γ­ Γ§Γ£ΓΉ Γ¥Γ®ΓΈΓ¥Γ§Γ· Γ©Γ¥ΓΊΓΈ
     sf::Vector2f startPos = wormPos + dir * SPAWN_OFFSET;
 
     auto shell = std::make_unique<BazookaShell>(controller.getWorld(), startPos, &worm);

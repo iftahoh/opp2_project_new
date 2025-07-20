@@ -1,4 +1,4 @@
-// include/Game/Object/Worm.h
+ο»Ώ// include/Game/Object/Worm.h
 
 #pragma once
 
@@ -36,7 +36,7 @@ public:
     GameController& getGameController();
     const sf::Sprite& getSprite() const { return m_sprite; }
 
-    // --- δερτπε τεπχφιδ μδεψγϊ ηιιν ---
+    // --- Γ¤Γ¥Γ±Γ΄Γ°Γ¥ Γ΄Γ¥Γ°Γ·Γ¶Γ©Γ¤ Γ¬Γ¤Γ¥ΓΈΓ£ΓΊ Γ§Γ©Γ©Γ­ ---
     void takeDamage(int amount);
 
 private:
@@ -45,7 +45,7 @@ private:
     void loadAnimation(const std::string& name, const sf::Texture& texture, int frameCount);
     int frameNumber(sf::Texture currTexture) const;
 
-    // --- δερτπε τεπχφιδ μςγλεο ξγ δηιιν ---
+    // --- Γ¤Γ¥Γ±Γ΄Γ°Γ¥ Γ΄Γ¥Γ°Γ·Γ¶Γ©Γ¤ Γ¬Γ²Γ£Γ«Γ¥Γ― Γ®Γ£ Γ¤Γ§Γ©Γ©Γ­ ---
     void updateHealthBar();
 
     GameController& m_gameController;
@@ -55,8 +55,8 @@ private:
     int m_jumpsLeft;
     static const int MAX_JUMPS = 2;
 
-    // --- δερτπε ξωϊπιν μξγ δηιιν ---
-    int m_health;
+    // --- Γ¤Γ¥Γ±Γ΄Γ°Γ¥ Γ®ΓΉΓΊΓ°Γ©Γ­ Γ¬Γ®Γ£ Γ¤Γ§Γ©Γ©Γ­ ---
+    int m_health = MAX_HEALTH;
     static const int MAX_HEALTH = 100;
     sf::RectangleShape m_healthBarBackground;
     sf::RectangleShape m_healthBarForeground;
@@ -74,6 +74,7 @@ private:
     sf::Texture m_jumpTexture;
     sf::Texture m_bazookaIdleTexture;
     sf::Texture m_bazookaAimTexture;
+
 
     static constexpr float SCALE = 30.0f;
 };
