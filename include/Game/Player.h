@@ -1,32 +1,33 @@
-#pragma once
+ο»Ώ#pragma once
 
 #include <vector>
 #include <memory>
 #include "Game/Object/Worm.h"
 
-// Forward declaration λγι μξπες ϊμεϊ ξςβμιϊ
+// Forward declaration Γ«Γ£Γ© Γ¬Γ®Γ°Γ¥Γ² ΓΊΓ¬Γ¥ΓΊ Γ®Γ²ΓΆΓ¬Γ©ΓΊ
 class GameController;
 
 class Player {
 public:
-    // δαπΰι ιχαμ ΰϊ δςεμν δτιζιχμι, δτπιδ μαχψ δξωηχ, εξιχεν δϊημϊι
+    // Γ¤Γ΅Γ°Γ Γ© Γ©Γ·Γ΅Γ¬ Γ ΓΊ Γ¤Γ²Γ¥Γ¬Γ­ Γ¤Γ΄Γ©Γ¦Γ©Γ·Γ¬Γ©, Γ¤Γ΄Γ°Γ©Γ¤ Γ¬Γ΅Γ·ΓΈ Γ¤Γ®ΓΉΓ§Γ·, Γ¥Γ®Γ©Γ·Γ¥Γ­ Γ¤ΓΊΓ§Γ¬ΓΊΓ©
     Player(b2World& world, GameController& gameController, const sf::Vector2f& basePosition);
 
-    // θιτεμ αχμθ ςαεψ δωηχο δπεληι
+    // Γ¨Γ©Γ΄Γ¥Γ¬ Γ΅Γ·Γ¬Γ¨ Γ²Γ΅Γ¥ΓΈ Γ¤ΓΉΓ§Γ·Γ― Γ¤Γ°Γ¥Γ«Γ§Γ©
     void handleInput(const sf::Event& event);
 
-    // ςγλεο λμ δϊεμςιν ωμ δωηχο (μξψεϊ ωδμεμΰδ δψΰωιϊ λαψ ςεωδ ζΰϊ)
+    // Γ²Γ£Γ«Γ¥Γ― Γ«Γ¬ Γ¤ΓΊΓ¥Γ¬Γ²Γ©Γ­ ΓΉΓ¬ Γ¤ΓΉΓ§Γ·Γ― (Γ¬Γ®ΓΈΓ¥ΓΊ ΓΉΓ¤Γ¬Γ¥Γ¬Γ Γ¤ Γ¤ΓΈΓ ΓΉΓ©ΓΊ Γ«Γ΅ΓΈ Γ²Γ¥ΓΉΓ¤ Γ¦Γ ΓΊ)
     void update(sf::Time deltaTime);
 
-    // φιεψ λμ δϊεμςιν ωμ δωηχο (εβν λΰο, δμεμΰδ δψΰωιϊ ϊςωδ ζΰϊ)
+    // Γ¶Γ©Γ¥ΓΈ Γ«Γ¬ Γ¤ΓΊΓ¥Γ¬Γ²Γ©Γ­ ΓΉΓ¬ Γ¤ΓΉΓ§Γ·Γ― (Γ¥ΓΆΓ­ Γ«Γ Γ―, Γ¤Γ¬Γ¥Γ¬Γ Γ¤ Γ¤ΓΈΓ ΓΉΓ©ΓΊ ΓΊΓ²ΓΉΓ¤ Γ¦Γ ΓΊ)
     void render(sf::RenderWindow& window);
+	sf::Vector2f getPosition() const;
 
 private:
     void nextWorm();
 
-    // εχθεψ ωμ ξφαιςιν μϊεμςιν. δαςμεϊ ςμ δϊεμςιν ςφξο ϊδιδ ωμ GameController
+    // Γ¥Γ·Γ¨Γ¥ΓΈ ΓΉΓ¬ Γ®Γ¶Γ΅Γ©Γ²Γ©Γ­ Γ¬ΓΊΓ¥Γ¬Γ²Γ©Γ­. Γ¤Γ΅Γ²Γ¬Γ¥ΓΊ Γ²Γ¬ Γ¤ΓΊΓ¥Γ¬Γ²Γ©Γ­ Γ²Γ¶Γ®Γ― ΓΊΓ¤Γ©Γ¤ ΓΉΓ¬ GameController
     std::vector<Worm*> m_worms;
     int m_currentWormIndex;
 
-    GameController& m_gameController; // ωξιψϊ ψτψπρ μαχψ
+    GameController& m_gameController; // ΓΉΓ®Γ©ΓΈΓΊ ΓΈΓ΄ΓΈΓ°Γ± Γ¬Γ΅Γ·ΓΈ
 };

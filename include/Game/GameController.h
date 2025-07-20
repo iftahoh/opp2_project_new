@@ -1,4 +1,4 @@
-#pragma once
+﻿#pragma once
 
 #include <SFML/Graphics.hpp>
 #include <box2d/box2d.h>
@@ -18,6 +18,7 @@ public:
     void addGameObject(std::unique_ptr<GameObject> object);
     b2World& getWorld();
 
+	static constexpr float SCALE = 30.0f; // Box2D scale factor
 private:
     void handleEvents();
     void update(sf::Time deltaTime);
@@ -34,4 +35,8 @@ private:
 
     sf::Texture m_skyTexture;
     sf::Sprite m_skySprite;
+
+	// --- camera ---
+    sf::View m_cameraView;
+   
 };

@@ -1,4 +1,4 @@
-#include "Game/Player.h"
+﻿#include "Game/Player.h"
 #include "Game/GameController.h"
 #include "Game/Object/Weapon/Bazooka.h"
 #include <iostream>
@@ -52,4 +52,9 @@ void Player::update(sf::Time deltaTime) {
 }
 
 void Player::render(sf::RenderWindow& window) {
+}
+
+sf::Vector2f Player::getPosition() const {
+	b2Vec2 pos = m_worms[m_currentWormIndex]->getBody()->GetPosition();
+	return sf::Vector2f(pos.x * GameController::SCALE, pos.y * GameController::SCALE);
 }
