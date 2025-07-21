@@ -34,6 +34,7 @@ Worm::Worm(b2World& world, GameController& controller, const sf::Vector2f& posit
     if (!m_jumpTexture.loadFromFile("wjumpu.png")) { std::cerr << "Error loading jump texture" << std::endl; }
     if (!m_bazookaIdleTexture.loadFromFile("wbaz.png")) { std::cerr << "Error loading bazooka idle texture" << std::endl; }
     if (!m_bazookaAimTexture.loadFromFile("wbazd.png")) { std::cerr << "Error loading bazooka aim texture" << std::endl; }
+    if (!m_deadTexture.loadFromFile("dead.png")) { std::cerr << "Error loading dead texture" << std::endl; }
 
     setupAnimations();
     setAnimation("idle");
@@ -86,6 +87,31 @@ void Worm::render(sf::RenderWindow& window) {
 }
 
 void Worm::update(sf::Time deltaTime) {
+    // --- התיקון המרכזי ---
+ // קודם כל, נבדוק אם התולעת סומנה כמתה
+    if (m_isDead) {
+        // אם הגוף שלה עדיין לא סטטי, זה הזמן לשנות אותו
+        if (m_body && m_body->GetType() != b2_staticBody) {
+            std::cout << "Worm is dead! Becoming a gravestone." << std::endl;
+
+            // 1. הפוך את הגוף הפיזיקלי לסטטי
+            m_body->SetType(b2_staticBody);
+
+            // 2. החלף את הטקסטורה לזו של המצבה
+            m_sprite.setTexture(m_deadTexture);
+            m_sprite.setTextureRect(sf::IntRect(0, 0,
+                m_deadTexture.getSize().x,
+                m_deadTexture.getSize().y));
+			m_sprite.setScale(0.05f, 0.05f); // התאם את הגודל של המצבה
+            m_sprite.setOrigin(m_sprite.getLocalBounds().width / 2.f,
+                m_sprite.getLocalBounds().height / 2.f);
+
+            // 3. נטרל את ה"מצב" של התולעת
+            m_state = nullptr;
+        }
+        // אחרי שהיא מצבה, אין לה יותר מה לעשות
+        return;
+    }
     DynamicObject::update(deltaTime);
     updateAnimation(deltaTime);
     updateHealthBar(); // ÷øéàä ìòãëåï îã äçééí áëì ôøééí
@@ -99,14 +125,17 @@ void Worm::update(sf::Time deltaTime) {
 }
 
 void Worm::takeDamage(int amount) {
+    if (m_isDead) return;
+
     m_health -= amount;
-    if (m_health < 0) {
-		m_isDead = true;
-		m_health = 0;
+
+    if (m_health <= 0) {
+        m_health = 0;
+        // **לא משנים כאן כלום! רק מסמנים את הדגל**
+        m_isDead = true;
     }
-    std::cout << "Worm took " << amount << " damage, health is now " << m_health << std::endl;
-    // ëàï àôùø ìäåñéó ìåâé÷ä ìîåú äúåìòú
 }
+
 
 void Worm::updateHealthBar() {
     // îé÷åí îã äçééí îòì ñôøééè äúåìòú
@@ -225,6 +254,7 @@ void Worm::updateDirection(bool faceRight) {
 }
 
 void Worm::handlePlayerInput(const sf::Event& event) {
+	if (m_isDead) return; 
     if (m_state) {
         m_state->handleInput(*this, event);
     }
