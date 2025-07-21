@@ -1,4 +1,4 @@
-// src/Game/Object/Worm.cpp
+ο»Ώ// src/Game/Object/Worm.cpp
 
 #include "Game/Object/Worm.h"
 #include "Game/State/WormIdleState.h"
@@ -11,9 +11,9 @@
 
 namespace {
     const float ANIMATION_SPEED_FPS = 12.0f;
-    // --- δβγψεϊ ηγωεϊ μξγ δηιιν ---
+    // --- Γ€Γ’Γ£ΓΈΓ₯ΓΊ Γ§Γ£ΓΉΓ₯ΓΊ Γ¬Γ®Γ£ Γ€Γ§Γ©Γ©Γ­ ---
     const sf::Vector2f HEALTH_BAR_SIZE(35.f, 4.f);
-    const float HEALTH_BAR_Y_OFFSET = 20.f; // λξδ βαεδ ξςμ δϊεμςϊ
+    const float HEALTH_BAR_Y_OFFSET = 20.f; // Γ«Γ®Γ€ Γ’Γ‘Γ₯Γ€ Γ®Γ²Γ¬ Γ€ΓΊΓ₯Γ¬Γ²ΓΊ
     // -----------------------------
 }
 
@@ -26,9 +26,9 @@ Worm::Worm(b2World& world, GameController& controller, const sf::Vector2f& posit
     m_isFacingRight(true),
     m_jumpsLeft(MAX_JUMPS),
     m_gameController(controller),
-    m_health(MAX_HEALTH) // ΰϊηεμ ηιιν μξχριξεν
+    m_health(MAX_HEALTH) // Γ ΓΊΓ§Γ₯Γ¬ Γ§Γ©Γ©Γ­ Γ¬Γ®Γ·Γ±Γ©Γ®Γ₯Γ­
 {
-    // ... (θςιπϊ θχρθεψεϊ εδβγψϊ ΰπιξφιεϊ πωΰψ μμΰ ωιπει) ...
+    // ... (Γ¨Γ²Γ©Γ°ΓΊ Γ¨Γ·Γ±Γ¨Γ₯ΓΈΓ₯ΓΊ Γ₯Γ€Γ’Γ£ΓΈΓΊ Γ Γ°Γ©Γ®ΓΆΓ©Γ₯ΓΊ Γ°ΓΉΓ ΓΈ Γ¬Γ¬Γ  ΓΉΓ©Γ°Γ₯Γ©) ...
     if (!m_idleTexture.loadFromFile("wblink1.png")) { std::cerr << "Error loading idle texture" << std::endl; }
     if (!m_walkTexture.loadFromFile("wwalk.png")) { std::cerr << "Error loading walk texture" << std::endl; }
     if (!m_jumpTexture.loadFromFile("wjumpu.png")) { std::cerr << "Error loading jump texture" << std::endl; }
@@ -38,7 +38,7 @@ Worm::Worm(b2World& world, GameController& controller, const sf::Vector2f& posit
     setupAnimations();
     setAnimation("idle");
 
-    // ... (δβγψϊ δβεσ δτιζιχμι πωΰψ μμΰ ωιπει) ...
+    // ... (Γ€Γ’Γ£ΓΈΓΊ Γ€Γ’Γ₯Γ³ Γ€Γ΄Γ©Γ¦Γ©Γ·Γ¬Γ© Γ°ΓΉΓ ΓΈ Γ¬Γ¬Γ  ΓΉΓ©Γ°Γ₯Γ©) ...
     b2BodyDef bodyDef;
     bodyDef.type = b2_dynamicBody;
     bodyDef.position.Set(position.x / SCALE, position.y / SCALE);
@@ -61,21 +61,21 @@ Worm::Worm(b2World& world, GameController& controller, const sf::Vector2f& posit
     m_body->GetUserData().pointer = reinterpret_cast<uintptr_t>(this);
     setState(std::make_unique<WormIdleState>());
 
-    // --- δβγψεϊ ψΰωεπιεϊ μξγ δηιιν ---
+    // --- Γ€Γ’Γ£ΓΈΓ₯ΓΊ ΓΈΓ ΓΉΓ₯Γ°Γ©Γ₯ΓΊ Γ¬Γ®Γ£ Γ€Γ§Γ©Γ©Γ­ ---
     m_healthBarBackground.setSize(HEALTH_BAR_SIZE);
-    m_healthBarBackground.setFillColor(sf::Color(50, 50, 50)); // ψχς ΰτεψ λδδ
+    m_healthBarBackground.setFillColor(sf::Color(50, 50, 50)); // ΓΈΓ·Γ² Γ Γ΄Γ₯ΓΈ Γ«Γ€Γ€
     m_healthBarBackground.setOrigin(HEALTH_BAR_SIZE.x / 2.f, HEALTH_BAR_SIZE.y / 2.f);
 
     m_healthBarForeground.setSize(HEALTH_BAR_SIZE);
     m_healthBarForeground.setFillColor(sf::Color::Red);
-    m_healthBarForeground.setOrigin(0, HEALTH_BAR_SIZE.y / 2.f); // Origin ωξΰμι λγι ωδωιπει αβεγμ ιιψΰδ θεα
+    m_healthBarForeground.setOrigin(0, HEALTH_BAR_SIZE.y / 2.f); // Origin ΓΉΓ®Γ Γ¬Γ© Γ«Γ£Γ© ΓΉΓ€ΓΉΓ©Γ°Γ₯Γ© Γ‘Γ’Γ₯Γ£Γ¬ Γ©Γ©ΓΈΓ Γ€ Γ¨Γ₯Γ‘
     // ------------------------------------
 }
 
 void Worm::render(sf::RenderWindow& window) {
     window.draw(m_sprite);
 
-    // --- φιεψ ξγ δηιιν ---
+    // --- ΓΆΓ©Γ₯ΓΈ Γ®Γ£ Γ€Γ§Γ©Γ©Γ­ ---
     window.draw(m_healthBarBackground);
     window.draw(m_healthBarForeground);
     // -----------------------
@@ -88,7 +88,7 @@ void Worm::render(sf::RenderWindow& window) {
 void Worm::update(sf::Time deltaTime) {
     DynamicObject::update(deltaTime);
     updateAnimation(deltaTime);
-    updateHealthBar(); // χψιΰδ μςγλεο ξγ δηιιν αλμ τψιιν
+    updateHealthBar(); // Γ·ΓΈΓ©Γ Γ€ Γ¬Γ²Γ£Γ«Γ₯Γ― Γ®Γ£ Γ€Γ§Γ©Γ©Γ­ Γ‘Γ«Γ¬ Γ΄ΓΈΓ©Γ©Γ­
 
     if (isGrounded()) {
         resetJumps();
@@ -101,27 +101,27 @@ void Worm::update(sf::Time deltaTime) {
 void Worm::takeDamage(int amount) {
     m_health -= amount;
     if (m_health < 0) {
-        m_health = 0;
+		m_isDead = true;
     }
     std::cout << "Worm took " << amount << " damage, health is now " << m_health << std::endl;
-    // λΰο ΰτωψ μδερισ μεβιχδ μξεϊ δϊεμςϊ
+    // Γ«Γ Γ― Γ Γ΄ΓΉΓΈ Γ¬Γ€Γ₯Γ±Γ©Γ³ Γ¬Γ₯Γ’Γ©Γ·Γ€ Γ¬Γ®Γ₯ΓΊ Γ€ΓΊΓ₯Γ¬Γ²ΓΊ
 }
 
 void Worm::updateHealthBar() {
-    // ξιχεν ξγ δηιιν ξςμ ρτψιιθ δϊεμςϊ
+    // Γ®Γ©Γ·Γ₯Γ­ Γ®Γ£ Γ€Γ§Γ©Γ©Γ­ Γ®Γ²Γ¬ Γ±Γ΄ΓΈΓ©Γ©Γ¨ Γ€ΓΊΓ₯Γ¬Γ²ΓΊ
     sf::Vector2f wormPos = m_sprite.getPosition();
     m_healthBarBackground.setPosition(wormPos.x, wormPos.y - HEALTH_BAR_Y_OFFSET);
 
-    // ςγλεο ΰεψκ ξγ δηιιν δΰγεν αδϊΰν μλξεϊ δηιιν
+    // Γ²Γ£Γ«Γ₯Γ― Γ Γ₯ΓΈΓͺ Γ®Γ£ Γ€Γ§Γ©Γ©Γ­ Γ€Γ Γ£Γ₯Γ­ Γ‘Γ€ΓΊΓ Γ­ Γ¬Γ«Γ®Γ₯ΓΊ Γ€Γ§Γ©Γ©Γ­
     float healthPercent = static_cast<float>(m_health) / MAX_HEALTH;
     m_healthBarForeground.setSize({ HEALTH_BAR_SIZE.x * healthPercent, HEALTH_BAR_SIZE.y });
 
-    // ξιχεν δξγ δΰγεν αχφδ δωξΰμι ωμ δψχς ωμε
+    // Γ®Γ©Γ·Γ₯Γ­ Γ€Γ®Γ£ Γ€Γ Γ£Γ₯Γ­ Γ‘Γ·ΓΆΓ€ Γ€ΓΉΓ®Γ Γ¬Γ© ΓΉΓ¬ Γ€ΓΈΓ·Γ² ΓΉΓ¬Γ₯
     m_healthBarForeground.setPosition(m_healthBarBackground.getPosition().x - HEALTH_BAR_SIZE.x / 2.f,
         m_healthBarBackground.getPosition().y);
 }
 
-// ... ωΰψ δτεπχφιεϊ ωμ Worm.cpp πωΰψεϊ μμΰ ωιπει ...
+// ... ΓΉΓ ΓΈ Γ€Γ΄Γ₯Γ°Γ·ΓΆΓ©Γ₯ΓΊ ΓΉΓ¬ Worm.cpp Γ°ΓΉΓ ΓΈΓ₯ΓΊ Γ¬Γ¬Γ  ΓΉΓ©Γ°Γ₯Γ© ...
 // (canJump, useJump, resetJumps, isGrounded, getGameController, equipWeapon,
 // loadAnimation, frameNumber, setupAnimations, setAnimation, updateAnimation,
 // updateDirection, handlePlayerInput, setState, applyForce, setHorizontalVelocity)

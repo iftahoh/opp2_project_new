@@ -1,4 +1,4 @@
-// include/Game/Object/GameObject.h
+ο»Ώ// include/Game/Object/GameObject.h
 
 #pragma once
 #include <SFML/Graphics.hpp>
@@ -6,14 +6,14 @@
 
 class GameObject {
 public:
-    // εεγΰ ωδδψρο χιιν εδεΰ ειψθεΰμι
+    // Γ¥Γ¥Γ£Γ  ΓΉΓ¤Γ¤ΓΈΓ±Γ― Γ·Γ©Γ©Γ­ Γ¥Γ¤Γ¥Γ  Γ¥Γ©ΓΈΓ¨Γ¥Γ Γ¬Γ©
     virtual ~GameObject() = default;
 
     virtual void render(sf::RenderWindow& window) = 0;
     virtual void update(sf::Time deltaTime) = 0;
 
-    // τεπχφιδ ειψθεΰμιϊ ωπερτδ λγι μαγεχ ΰν δΰεαιιχθ "ξϊ" ειω μδριψ ΰεϊε.
-    // αψιψϊ δξηγμ διΰ false, εξημχεϊ ιεψωεϊ ιλεμεϊ μξξω ΰεϊδ ΰηψϊ.
+    // Γ΄Γ¥Γ°Γ·Γ¶Γ©Γ¤ Γ¥Γ©ΓΈΓ¨Γ¥Γ Γ¬Γ©ΓΊ ΓΉΓ°Γ¥Γ±Γ΄Γ¤ Γ«Γ£Γ© Γ¬Γ΅Γ£Γ¥Γ· Γ Γ­ Γ¤Γ Γ¥Γ΅Γ©Γ©Γ·Γ¨ "Γ®ΓΊ" Γ¥Γ©ΓΉ Γ¬Γ¤Γ±Γ©ΓΈ Γ Γ¥ΓΊΓ¥.
+    // Γ΅ΓΈΓ©ΓΈΓΊ Γ¤Γ®Γ§Γ£Γ¬ Γ¤Γ©Γ  false, Γ¥Γ®Γ§Γ¬Γ·Γ¥ΓΊ Γ©Γ¥ΓΈΓΉΓ¥ΓΊ Γ©Γ«Γ¥Γ¬Γ¥ΓΊ Γ¬Γ®Γ®ΓΉ Γ Γ¥ΓΊΓ¤ Γ Γ§ΓΈΓΊ.
     virtual bool isDead() const { return false; }
 
     b2Body* getBody() const { return m_body; }
@@ -21,4 +21,5 @@ public:
 protected:
     b2Body* m_body = nullptr;
     sf::Sprite m_sprite;
+    bool m_isDead = false;
 };

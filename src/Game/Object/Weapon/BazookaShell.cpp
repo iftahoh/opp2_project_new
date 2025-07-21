@@ -1,33 +1,32 @@
-// src/Game/Object/Weapon/BazookaShell.cpp
+ן»¿// src/Game/Object/Weapon/BazookaShell.cpp
 
 #include "Game/Object/Weapon/BazookaShell.h"
 #include "ResourceGraphic.h"
 #include "Game/CollisionCategories.h"
 #include "Game/Object/DynamicObject.h"
-#include "Game/Object/Worm.h" // נוודא שההגדרה של Worm כלולה
+#include "Game/Object/Worm.h" 
 #include <iostream>
 
-// --- הבנאי של הקליע ---
+
 BazookaShell::BazookaShell(b2World& world, const sf::Vector2f& position, Worm* owner)
     : Projectile(world, position, owner),
-    m_explosionTexture(ResourceGraphic::getInstance().getTexture("explosion"))
+    m_explosionTexture(ResourceGraphic::getInstance().getTexture("firehit"))
 {
     m_sprite.setTexture(ResourceGraphic::getInstance().getTexture("missil"));
     m_sprite.setOrigin(m_sprite.getLocalBounds().width / 2.f, m_sprite.getLocalBounds().height / 2.f);
 
-    // --- הגדרת הגוף הפיזיקלי ---
+ 
     b2BodyDef bodyDef;
     bodyDef.type = b2_dynamicBody;
     bodyDef.position.Set(position.x / SCALE, position.y / SCALE);
     bodyDef.bullet = true;
     m_body = world.CreateBody(&bodyDef);
 
-    // ================== תיקון קריטי: אתחול מיקום הספרייט ==================
-    // הגדרת המיקום הראשוני של הספרייט כדי למנוע ממנו להופיע ב-(0,0)
+
     m_sprite.setPosition(position);
     // =====================================================================
 
-    // --- הגדרת צורת ההתנגשות (Fixture) ---
+    // --- ֳ₪ֳ¢ֳ£ֳ¸ֳ÷ ֳ¶ֳ¥ֳ¸ֳ÷ ֳ₪ֳ₪ֳ÷ֳ°ֳ¢ֳ¹ֳ¥ֳ÷ (Fixture) ---
     b2CircleShape shape;
     shape.m_radius = (m_sprite.getTexture()->getSize().y / 2.f) / SCALE;
 
@@ -46,7 +45,7 @@ BazookaShell::BazookaShell(b2World& world, const sf::Vector2f& position, Worm* o
     m_explosionRect = sf::IntRect(0, 0, 100, 100);
 }
 
-// --- פונקציה שנקראת בעת התנגשות ---
+// --- ֳ´ֳ¥ֳ°ֳ·ֳ¶ֳ©ֳ₪ ֳ¹ֳ°ֳ·ֳ¸ֳ ֳ÷ ֳ¡ֳ²ֳ÷ ֳ₪ֳ÷ֳ°ֳ¢ֳ¹ֳ¥ֳ÷ ---
 void BazookaShell::onCollision() {
     if (!m_exploding) {
         m_exploding = true;
@@ -54,7 +53,7 @@ void BazookaShell::onCollision() {
     }
 }
 
-// --- פונקציית העדכון שרצה בכל פריים ---
+// --- ֳ´ֳ¥ֳ°ֳ·ֳ¶ֳ©ֳ©ֳ÷ ֳ₪ֳ²ֳ£ֳ«ֳ¥ֳ¯ ֳ¹ֳ¸ֳ¶ֳ₪ ֳ¡ֳ«ֳ¬ ֳ´ֳ¸ֳ©ֳ©ֳ­ ---
 void BazookaShell::update(sf::Time deltaTime) {
     if (m_exploding) {
         if (m_body && m_body->GetType() == b2_dynamicBody) {
@@ -85,7 +84,7 @@ void BazookaShell::update(sf::Time deltaTime) {
     }
 }
 
-// --- פונקציית הציור ---
+// --- ֳ´ֳ¥ֳ°ֳ·ֳ¶ֳ©ֳ©ֳ÷ ֳ₪ֳ¶ֳ©ֳ¥ֳ¸ ---
 void BazookaShell::render(sf::RenderWindow& window) {
     window.draw(m_sprite);
 }

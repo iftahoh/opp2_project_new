@@ -1,4 +1,4 @@
-// include/Game/Object/Weapon/Projectile.h
+ο»Ώ// include/Game/Object/Weapon/Projectile.h
 
 #pragma once
 #include "Game/Object/DynamicObject.h"
@@ -9,11 +9,11 @@ class Projectile : public DynamicObject {
 public:
     Projectile(b2World& world, const sf::Vector2f& position, Worm* owner);
 
-    // ξϊεγδ ειψθεΰμιϊ θδεψδ ωϊξεξω ςμ ιγι λμ ρεβ χμις.
-    // διΰ πχψΰϊ λΰωψ δχμις τεβς αξωδε.
+    // Γ®ΓΊΓ₯Γ£Γ€ Γ₯Γ©ΓΈΓ¨Γ₯Γ Γ¬Γ©ΓΊ Γ¨Γ€Γ₯ΓΈΓ€ ΓΉΓΊΓ®Γ₯Γ®ΓΉ Γ²Γ¬ Γ©Γ£Γ© Γ«Γ¬ Γ±Γ₯Γ’ Γ·Γ¬Γ©Γ².
+    // Γ€Γ©Γ  Γ°Γ·ΓΈΓ ΓΊ Γ«Γ ΓΉΓΈ Γ€Γ·Γ¬Γ©Γ² Γ΄Γ₯Γ’Γ² Γ‘Γ®ΓΉΓ€Γ₯.
     virtual void onCollision() = 0;
 
-    // ξιξεω ωμ δξϊεγδ isDead ξδξημχδ GameObject.
+    // Γ®Γ©Γ®Γ₯ΓΉ ΓΉΓ¬ Γ€Γ®ΓΊΓ₯Γ£Γ€ isDead Γ®Γ€Γ®Γ§Γ¬Γ·Γ€ GameObject.
     bool isDead() const override { return m_isDead; }
 
     void update(sf::Time deltaTime) override;
@@ -21,9 +21,9 @@ public:
     Worm* getOwner() const;
 
 protected:
-    Worm* m_owner; // λγι μγςϊ ξι ιεψδ λςϊ λγι ωδπζχ μΰ ιωτις ΰμιε
+    Worm* m_owner; // Γ«Γ£Γ© Γ¬Γ£Γ²ΓΊ Γ®Γ© Γ©Γ₯ΓΈΓ€ Γ«Γ²ΓΊ Γ«Γ£Γ© ΓΉΓ€Γ°Γ¦Γ· Γ¬Γ  Γ©ΓΉΓ΄Γ©Γ² Γ Γ¬Γ©Γ₯
 
-    // γβμ ωξφιιο ΰν δχμις ριιν ΰϊ ηιιε ειω μδριψ ΰεϊε.
-    bool m_isDead = false;
+    // Γ£Γ’Γ¬ ΓΉΓ®ΓΆΓ©Γ©Γ― Γ Γ­ Γ€Γ·Γ¬Γ©Γ² Γ±Γ©Γ©Γ­ Γ ΓΊ Γ§Γ©Γ©Γ₯ Γ₯Γ©ΓΉ Γ¬Γ€Γ±Γ©ΓΈ Γ Γ₯ΓΊΓ₯.
+    
     static constexpr float SCALE = 30.0f;
 };
