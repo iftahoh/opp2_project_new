@@ -102,6 +102,7 @@ void Worm::takeDamage(int amount) {
     m_health -= amount;
     if (m_health < 0) {
 		m_isDead = true;
+		m_health = 0;
     }
     std::cout << "Worm took " << amount << " damage, health is now " << m_health << std::endl;
     // ëàï àôùø ìäåñéó ìåâé÷ä ìîåú äúåìòú

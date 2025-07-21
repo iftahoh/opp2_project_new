@@ -11,6 +11,11 @@ public:
     void render(sf::RenderWindow& window) override;
 
 private:
+    // --- הגדרות חדשות לפיצוץ ---
+    static const int BAZOOKA_DAMAGE = 30;
+    static const float EXPLOSION_RADIUS; // הגדרת הרדיוס במטרים של Box2D
+    // ----------------------------
+
     bool m_exploding = false;
     // שמור רפרנס לטקסטורה במקום אובייקט מלא
     sf::Texture& m_explosionTexture;
