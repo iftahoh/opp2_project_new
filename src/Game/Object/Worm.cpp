@@ -34,7 +34,7 @@ Worm::Worm(b2World& world, GameController& controller, const sf::Vector2f& posit
     if (!m_jumpTexture.loadFromFile("wjumpu.png")) { std::cerr << "Error loading jump texture" << std::endl; }
     if (!m_bazookaIdleTexture.loadFromFile("wbaz.png")) { std::cerr << "Error loading bazooka idle texture" << std::endl; }
     if (!m_bazookaAimTexture.loadFromFile("wbazd.png")) { std::cerr << "Error loading bazooka aim texture" << std::endl; }
-    if (!m_deadTexture.loadFromFile("dead.png")) { std::cerr << "Error loading dead texture" << std::endl; }
+    if (!m_graveTexture.loadFromFile("grave1.png")) { std::cerr << "Error loading dead texture" << std::endl; }
 
     setupAnimations();
     setAnimation("idle");
@@ -98,11 +98,10 @@ void Worm::update(sf::Time deltaTime) {
             m_body->SetType(b2_staticBody);
 
             // 2. החלף את הטקסטורה לזו של המצבה
-            m_sprite.setTexture(m_deadTexture);
+            m_sprite.setTexture(m_graveTexture);
             m_sprite.setTextureRect(sf::IntRect(0, 0,
-                m_deadTexture.getSize().x,
-                m_deadTexture.getSize().y));
-			m_sprite.setScale(0.05f, 0.05f); // התאם את הגודל של המצבה
+                m_graveTexture.getSize().x,
+                m_graveTexture.getSize().y));
             m_sprite.setOrigin(m_sprite.getLocalBounds().width / 2.f,
                 m_sprite.getLocalBounds().height / 2.f);
 

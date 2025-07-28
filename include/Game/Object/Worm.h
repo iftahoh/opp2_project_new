@@ -74,7 +74,7 @@ private:
     sf::Texture m_jumpTexture;
     sf::Texture m_bazookaIdleTexture;
     sf::Texture m_bazookaAimTexture;
-	sf::Texture m_deadTexture;
+	sf::Texture m_graveTexture;
 
 
     static constexpr float SCALE = 30.0f;
