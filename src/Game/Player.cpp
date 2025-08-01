@@ -1,6 +1,7 @@
 ﻿#include "Game/Player.h"
 #include "Game/GameController.h"
 #include "Game/Object/Weapon/Bazooka.h"
+#include "Game/Object/Weapon/Grenade.h"
 #include <iostream>
 
 const int NUM_WORMS_PER_PLAYER = 5;
@@ -31,6 +32,12 @@ void Player::handleInput(const sf::Event& event) {
         if (event.key.code == sf::Keyboard::Num1) {
             if (!m_worms.empty()) {
                 m_worms[m_currentWormIndex]->equipWeapon(std::make_unique<Bazooka>());
+                return;
+            }
+        }
+        else if (event.key.code == sf::Keyboard::Num2) {
+            if (!m_worms.empty()) {
+                m_worms[m_currentWormIndex]->equipWeapon(std::make_unique<Grenade>());
                 return;
             }
         }
