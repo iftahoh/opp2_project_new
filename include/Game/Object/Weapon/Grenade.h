@@ -10,6 +10,10 @@ public:
     void update(Worm& worm, GameController& controller) override;
     void render(sf::RenderWindow& window, const Worm& worm) override;
 
+    // ✅ פונקציות חדשות
+    std::string getAimingAnimationName() const override;
+    std::string getIdleAnimationName() const override;
+
 private:
     void fire(Worm& worm);
 

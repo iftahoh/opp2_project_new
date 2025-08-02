@@ -1,4 +1,4 @@
-#include "Game/State/WormAimingState.h"
+﻿#include "Game/State/WormAimingState.h"
 #include "Game/Object/Worm.h"
 
 WormAimingState::WormAimingState(std::unique_ptr<IWeapon> weapon)
@@ -6,7 +6,9 @@ WormAimingState::WormAimingState(std::unique_ptr<IWeapon> weapon)
 }
 
 void WormAimingState::onEnter(Worm& worm) {
-    worm.setAnimation("bazooka_aim");
+    if (m_weapon) {
+        worm.setAnimation(m_weapon->getAimingAnimationName());
+    }
 }
 
 void WormAimingState::handleInput(Worm& worm, const sf::Event& event) {
@@ -26,5 +28,7 @@ void WormAimingState::render(sf::RenderWindow& window, Worm& worm) {
 }
 
 void WormAimingState::onExit(Worm& worm) {
-    worm.setAnimation("bazooka_idle");
+    if (m_weapon) {
+        worm.setAnimation(m_weapon->getIdleAnimationName());
+    }
 }

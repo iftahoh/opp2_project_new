@@ -64,3 +64,11 @@ void Bazooka::fire(Worm& worm) {
 
     controller.addGameObject(std::move(shell));
 }
+
+std::string Bazooka::getAimingAnimationName() const {
+    return "bazooka_aim";
+}
+
+std::string Bazooka::getIdleAnimationName() const {
+    return "bazooka_idle";
+}

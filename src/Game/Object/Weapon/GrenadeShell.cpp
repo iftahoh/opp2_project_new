@@ -46,13 +46,6 @@ GrenadeShell::GrenadeShell(b2World& world, const sf::Vector2f& position, Worm* o
 
 // --- פונקציה שנקראת בעת התנגשות ---
 void GrenadeShell::onCollision() {
-    if (m_exploding) {
-        return; // אם כבר מתפוצצים, לא לעשות כלום
-    }
-    
-    m_exploding = true;
-    m_explosionTimer = sf::Time::Zero;
-
     // --- לוגיקת הנזק החדשה ---
     b2World* world = m_body->GetWorld();
     b2Vec2 explosionCenter = m_body->GetPosition();
@@ -97,6 +90,11 @@ void GrenadeShell::onCollision() {
 
 // --- פונקציית העדכון ---
 void GrenadeShell::update(sf::Time deltaTime) {
+	m_lifetime += deltaTime;
+    if(m_lifetime >= m_detonationTime) {
+        m_exploding = true; // הפעלת מצב פיצוץ
+	}
+    
     if (m_exploding) {
         // הפיכת הגוף לסטטי כדי שלא יזוז בזמן הפיצוץ
         if (m_body && m_body->GetType() == b2_dynamicBody) {

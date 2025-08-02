@@ -63,3 +63,11 @@ void Grenade::fire(Worm& worm) {
 
     controller.addGameObject(std::move(shell));
 }
+
+std::string Grenade::getAimingAnimationName() const {
+    return "grenade_aim";
+}
+
+std::string Grenade::getIdleAnimationName() const {
+    return "grenade_idle";
+}

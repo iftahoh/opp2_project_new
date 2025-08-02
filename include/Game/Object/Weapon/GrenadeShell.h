@@ -21,4 +21,8 @@ private:
     sf::Texture& m_explosionTexture;
     sf::IntRect m_explosionRect;
     sf::Time m_explosionTimer;
+
+    sf::Time m_lifetime;            // סופר כמה זמן עבר
+    sf::Time m_detonationTime = sf::seconds(5); // הזמן עד לפיצוץ
+
 };

@@ -35,6 +35,8 @@ Worm::Worm(b2World& world, GameController& controller, const sf::Vector2f& posit
     if (!m_bazookaIdleTexture.loadFromFile("wbaz.png")) { std::cerr << "Error loading bazooka idle texture" << std::endl; }
     if (!m_bazookaAimTexture.loadFromFile("wbazd.png")) { std::cerr << "Error loading bazooka aim texture" << std::endl; }
     if (!m_graveTexture.loadFromFile("grave1.png")) { std::cerr << "Error loading dead texture" << std::endl; }
+    if (!m_grenadeIdleTexture.loadFromFile("wgrn.png")) { std::cerr << "Error loading bazooka aim texture" << std::endl; }
+    if (!m_grenadeAimTexture.loadFromFile("wgrn.png")) { std::cerr << "Error loading bazooka aim texture" << std::endl; }
 
     setupAnimations();
     setAnimation("idle");
@@ -203,6 +205,9 @@ void Worm::setupAnimations() {
     loadAnimation("jump", m_jumpTexture, frameNumber(m_jumpTexture));
     loadAnimation("bazooka_idle", m_bazookaIdleTexture, frameNumber(m_bazookaIdleTexture));
     loadAnimation("bazooka_aim", m_bazookaAimTexture, frameNumber(m_bazookaAimTexture));
+	loadAnimation("grenade_idle", m_grenadeIdleTexture, frameNumber(m_grenadeIdleTexture));
+    loadAnimation("grenade_aim", m_grenadeAimTexture, frameNumber(m_grenadeAimTexture));
+    
 }
 
 void Worm::setAnimation(const std::string& name) {
@@ -221,6 +226,8 @@ void Worm::setAnimation(const std::string& name) {
     else if (name == "jump") m_sprite.setTexture(m_jumpTexture, true);
     else if (name == "bazooka_idle") m_sprite.setTexture(m_bazookaIdleTexture, true);
     else if (name == "bazooka_aim") m_sprite.setTexture(m_bazookaAimTexture, true);
+    else if (name == "grenade_idle") m_sprite.setTexture(m_grenadeIdleTexture, true);
+    else if (name == "grenade_aim") m_sprite.setTexture(m_grenadeAimTexture, true);
     else {
         std::cerr << "Unknown animation name for texture setting: " << name << std::endl;
         return;
