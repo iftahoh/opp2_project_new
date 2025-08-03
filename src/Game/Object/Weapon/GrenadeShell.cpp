@@ -46,6 +46,7 @@ GrenadeShell::GrenadeShell(b2World& world, const sf::Vector2f& position, Worm* o
 
 // --- פונקציה שנקראת בעת התנגשות ---
 void GrenadeShell::onCollision() {
+	if (!m_exploding) return; // אם לא בפיצוץ, לא לעשות כלום
     // --- לוגיקת הנזק החדשה ---
     b2World* world = m_body->GetWorld();
     b2Vec2 explosionCenter = m_body->GetPosition();
