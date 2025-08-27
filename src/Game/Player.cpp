@@ -50,10 +50,30 @@ void Player::handleInput(const sf::Event& event) {
 
 void Player::nextWorm() {
     if (m_worms.empty()) return;
-    m_worms[m_currentWormIndex]->getBody()->SetLinearVelocity(b2Vec2(0, 0));
-    m_currentWormIndex = (m_currentWormIndex + 1) % m_worms.size();
-    std::cout << "Switched to worm " << m_currentWormIndex + 1 << std::endl;
+
+    // לעצור את התולעת הנוכחית
+    if (m_worms[m_currentWormIndex] && m_worms[m_currentWormIndex]->getBody()) {
+        m_worms[m_currentWormIndex]->getBody()->SetLinearVelocity(b2Vec2(0.f, 0.f));
+    }
+
+    const std::size_t n = m_worms.size();
+    std::size_t attempts = 0;
+
+    // נתקדם קדימה עד שנמצא תולעת חיה או שנעשה סיבוב מלא
+    do {
+        m_currentWormIndex = (m_currentWormIndex + 1) % n;
+        ++attempts;
+    } while (attempts < n && m_worms[m_currentWormIndex] && m_worms[m_currentWormIndex]->isGrave());
+
+    // אם כולן קברים
+    if (m_worms[m_currentWormIndex]->isGrave()) {
+        std::cout << "No alive worms for this player.\n";
+        return;
+    }
+
+    std::cout << "Switched to worm " << (m_currentWormIndex + 1) << std::endl;
 }
+
 
 void Player::update(sf::Time deltaTime) {
 }

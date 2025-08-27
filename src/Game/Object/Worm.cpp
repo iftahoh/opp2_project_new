@@ -3,6 +3,7 @@
 #include "Game/Object/Worm.h"
 #include "Game/State/WormIdleState.h"
 #include "Game/State/WormAimingState.h"
+#include "Game/State/WormGraveState.h"
 #include "Game/CollisionCategories.h"
 #include "Game/GameController.h"
 #include "Game/Object/Weapon/IWeapon.h"
@@ -19,6 +20,7 @@ namespace {
 
 const sf::Time Worm::ANIMATION_FRAME_DURATION = sf::seconds(1.f / ANIMATION_SPEED_FPS);
 
+//------------------------------------------------------------------
 Worm::Worm(b2World& world, GameController& controller, const sf::Vector2f& position)
     : m_currentFrame(0),
     m_animationTimer(sf::Time::Zero),
@@ -75,44 +77,26 @@ Worm::Worm(b2World& world, GameController& controller, const sf::Vector2f& posit
     // ------------------------------------
 }
 
+//------------------------------------------------------------------
 void Worm::render(sf::RenderWindow& window) {
     window.draw(m_sprite);
 
-    // --- öéåø îã äçééí ---
-    window.draw(m_healthBarBackground);
-    window.draw(m_healthBarForeground);
-    // -----------------------
+    if (m_health > 0) {
+        window.draw(m_healthBarBackground);
+        window.draw(m_healthBarForeground);
+    }
 
     if (m_state) {
         m_state->render(window, *this);
     }
 }
 
+//------------------------------------------------------------------
 void Worm::update(sf::Time deltaTime) {
     // --- התיקון המרכזי ---
  // קודם כל, נבדוק אם התולעת סומנה כמתה
-    if (m_isDead) {
-        // אם הגוף שלה עדיין לא סטטי, זה הזמן לשנות אותו
-        if (m_body && m_body->GetType() != b2_staticBody) {
-            std::cout << "Worm is dead! Becoming a gravestone." << std::endl;
+    if (isGrave()) { return; }
 
-            // 1. הפוך את הגוף הפיזיקלי לסטטי
-            m_body->SetType(b2_staticBody);
-
-            // 2. החלף את הטקסטורה לזו של המצבה
-            m_sprite.setTexture(m_graveTexture);
-            m_sprite.setTextureRect(sf::IntRect(0, 0,
-                m_graveTexture.getSize().x,
-                m_graveTexture.getSize().y));
-            m_sprite.setOrigin(m_sprite.getLocalBounds().width / 2.f,
-                m_sprite.getLocalBounds().height / 2.f);
-
-            // 3. נטרל את ה"מצב" של התולעת
-            m_state = nullptr;
-        }
-        // אחרי שהיא מצבה, אין לה יותר מה לעשות
-        return;
-    }
     DynamicObject::update(deltaTime);
     updateAnimation(deltaTime);
     updateHealthBar(); // ÷øéàä ìòãëåï îã äçééí áëì ôøééí
@@ -125,19 +109,25 @@ void Worm::update(sf::Time deltaTime) {
     }
 }
 
+//------------------------------------------------------------------
 void Worm::takeDamage(int amount) {
-    if (m_isDead) return;
 
-    m_health -= amount;
-
+	m_health = m_health - amount;
     if (m_health <= 0) {
-        m_health = 0;
-        // **לא משנים כאן כלום! רק מסמנים את הדגל**
-        m_isDead = true;
+        m_sprite.setTexture(m_graveTexture);
+        m_sprite.setTextureRect(sf::IntRect(0, 0,
+            m_graveTexture.getSize().x,
+            m_graveTexture.getSize().y));
+        m_sprite.setOrigin(m_sprite.getLocalBounds().width / 2.f,
+            m_sprite.getLocalBounds().height / 2.f);
+
+        // מעבר ל-GraveState – הוא יטפל בפיזיקה/קוליזיות
+        setState(std::make_unique<WormGraveState>());
     }
+
 }
 
-
+//------------------------------------------------------------------
 void Worm::updateHealthBar() {
     // îé÷åí îã äçééí îòì ñôøééè äúåìòú
     sf::Vector2f wormPos = m_sprite.getPosition();
@@ -157,10 +147,12 @@ void Worm::updateHealthBar() {
 // loadAnimation, frameNumber, setupAnimations, setAnimation, updateAnimation,
 // updateDirection, handlePlayerInput, setState, applyForce, setHorizontalVelocity)
 
+//------------------------------------------------------------------
 bool Worm::canJump() const { return m_jumpsLeft > 0; }
 void Worm::useJump() { if (canJump()) m_jumpsLeft--; }
 void Worm::resetJumps() { m_jumpsLeft = MAX_JUMPS; }
 
+//------------------------------------------------------------------
 bool Worm::isGrounded() {
     for (b2ContactEdge* edge = m_body->GetContactList(); edge; edge = edge->next) {
         if (edge->contact->IsTouching()) {
@@ -175,14 +167,17 @@ bool Worm::isGrounded() {
     return false;
 }
 
+//------------------------------------------------------------------
 GameController& Worm::getGameController() {
     return m_gameController;
 }
 
+//------------------------------------------------------------------
 void Worm::equipWeapon(std::unique_ptr<IWeapon> weapon) {
     setState(std::make_unique<WormAimingState>(std::move(weapon)));
 }
 
+//------------------------------------------------------------------
 void Worm::loadAnimation(const std::string& name, const sf::Texture& texture, int frameCount) {
     std::vector<sf::IntRect> frames;
     sf::Vector2u textureSize = texture.getSize();
@@ -195,10 +190,12 @@ void Worm::loadAnimation(const std::string& name, const sf::Texture& texture, in
     m_animations[name] = frames;
 }
 
+//------------------------------------------------------------------
 int Worm::frameNumber(sf::Texture currTexture) const {
     return currTexture.getSize().y > 0 ? currTexture.getSize().y / currTexture.getSize().x : 1;
 }
 
+//------------------------------------------------------------------
 void Worm::setupAnimations() {
     loadAnimation("idle", m_idleTexture, frameNumber(m_idleTexture));
     loadAnimation("walk", m_walkTexture, frameNumber(m_walkTexture));
@@ -207,9 +204,9 @@ void Worm::setupAnimations() {
     loadAnimation("bazooka_aim", m_bazookaAimTexture, frameNumber(m_bazookaAimTexture));
 	loadAnimation("grenade_idle", m_grenadeIdleTexture, frameNumber(m_grenadeIdleTexture));
     loadAnimation("grenade_aim", m_grenadeAimTexture, frameNumber(m_grenadeAimTexture));
-    
 }
 
+//------------------------------------------------------------------
 void Worm::setAnimation(const std::string& name) {
     auto it = m_animations.find(name);
     if (it == m_animations.end()) {
@@ -241,6 +238,7 @@ void Worm::setAnimation(const std::string& name) {
     }
 }
 
+//------------------------------------------------------------------
 void Worm::updateAnimation(sf::Time deltaTime) {
     if (!m_currentAnimation || m_currentAnimation->empty()) return;
 
@@ -252,6 +250,7 @@ void Worm::updateAnimation(sf::Time deltaTime) {
     }
 }
 
+//------------------------------------------------------------------
 void Worm::updateDirection(bool faceRight) {
     if (m_isFacingRight != faceRight) {
         m_isFacingRight = faceRight;
@@ -259,13 +258,15 @@ void Worm::updateDirection(bool faceRight) {
     }
 }
 
+//------------------------------------------------------------------
 void Worm::handlePlayerInput(const sf::Event& event) {
-	if (m_isDead) return; 
+	if (isGrave()) return; 
     if (m_state) {
         m_state->handleInput(*this, event);
     }
 }
 
+//------------------------------------------------------------------
 void Worm::setState(std::unique_ptr<IWormState> newState) {
     if (m_state) {
         m_state->onExit(*this);
@@ -276,12 +277,19 @@ void Worm::setState(std::unique_ptr<IWormState> newState) {
     }
 }
 
+//------------------------------------------------------------------
 void Worm::applyForce(const b2Vec2& force) {
     m_body->ApplyLinearImpulse(force, m_body->GetWorldCenter(), true);
 }
 
+//------------------------------------------------------------------
 void Worm::setHorizontalVelocity(float vx) {
     b2Vec2 currentVel = m_body->GetLinearVelocity();
     currentVel.x = vx;
     m_body->SetLinearVelocity(currentVel);
+}
+
+//------------------------------------------------------------------
+bool Worm::isGrave() const {
+    return dynamic_cast<WormGraveState*>(m_state.get()) != nullptr;
 }

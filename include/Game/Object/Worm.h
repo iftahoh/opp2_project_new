@@ -38,6 +38,9 @@ public:
 
     // --- äåñôðå ôåð÷öéä ìäåøãú çééí ---
     void takeDamage(int amount);
+    bool isGrave() const;
+   
+
 
 private:
     void setupAnimations();
