@@ -21,7 +21,7 @@ namespace {
 const sf::Time Worm::ANIMATION_FRAME_DURATION = sf::seconds(1.f / ANIMATION_SPEED_FPS);
 
 //------------------------------------------------------------------
-Worm::Worm(b2World& world, GameController& controller, const sf::Vector2f& position)
+Worm::Worm(b2World& world, GameController& controller, const sf::Vector2f& position, sf::Color color)
     : m_currentFrame(0),
     m_animationTimer(sf::Time::Zero),
     m_currentAnimation(nullptr),
@@ -72,7 +72,7 @@ Worm::Worm(b2World& world, GameController& controller, const sf::Vector2f& posit
     m_healthBarBackground.setOrigin(HEALTH_BAR_SIZE.x / 2.f, HEALTH_BAR_SIZE.y / 2.f);
 
     m_healthBarForeground.setSize(HEALTH_BAR_SIZE);
-    m_healthBarForeground.setFillColor(sf::Color::Red);
+    m_healthBarForeground.setFillColor(color);
     m_healthBarForeground.setOrigin(0, HEALTH_BAR_SIZE.y / 2.f); // Origin ùîàìé ëãé ùäùéðåé áâåãì ééøàä èåá
     // ------------------------------------
 }

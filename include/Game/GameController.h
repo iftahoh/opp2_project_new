@@ -19,6 +19,10 @@ public:
     b2World& getWorld();
 
 	static constexpr float SCALE = 30.0f; // Box2D scale factor
+
+    void requestEndTurn();  // קרא לזה כששחקן השתמש בנשק ורוצים לסיים תור
+    void startTurn();   // איפוס טיימר/התחלת תור
+    void endTurn();
 private:
     void handleEvents();
     void update(sf::Time deltaTime);
@@ -39,6 +43,13 @@ private:
 	// --- camera ---
     sf::View m_cameraView;
 
-  
-   
+    // --- Turn management (basic) ---
+    float m_turnTimeDefault = 30.f;  // כמה שניות לתור
+    float m_turnTimer = 30.f;  // הטיימר שרץ בפועל
+
+    bool m_endTurnRequested = false; // דגל פנימי לבקשת סיום תור
+
+    // -------- HUD -------- // NEW
+    sf::Text m_hudText;          // טקסט ל-HUD
+    bool     m_hudReady = false; // נדע אם הטעינה הצליחה
 };

@@ -6,8 +6,8 @@
 
 const int NUM_WORMS_PER_PLAYER = 5;
 
-Player::Player(b2World& world, GameController& gameController, const sf::Vector2f& basePosition)
-    : m_currentWormIndex(0), m_gameController(gameController) {
+Player::Player(b2World& world, GameController& gameController, const sf::Vector2f& basePosition, sf::Color color)
+	: m_currentWormIndex(0), m_gameController(gameController), m_color(color) {
 
     for (int i = 0; i < NUM_WORMS_PER_PLAYER; ++i) {
         sf::Vector2f wormPos = basePosition + sf::Vector2f(i * 50.f, 0.f);
@@ -15,7 +15,7 @@ Player::Player(b2World& world, GameController& gameController, const sf::Vector2
         const float y_offset = 3.0f * b2_linearSlop * 30.0f;
         wormPos.y += y_offset;
 
-        auto worm = std::make_unique<Worm>(world, m_gameController, wormPos);
+        auto worm = std::make_unique<Worm>(world, m_gameController, wormPos, m_color);
 
         m_worms.push_back(worm.get());
         m_gameController.addGameObject(std::move(worm));

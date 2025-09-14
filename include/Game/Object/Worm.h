@@ -14,7 +14,7 @@ class IWeapon;
 
 class Worm : public DynamicObject {
 public:
-    Worm(b2World& world, GameController& controller, const sf::Vector2f& position);
+    Worm(b2World& world, GameController& controller, const sf::Vector2f& position, sf::Color color);
 
     void render(sf::RenderWindow& window) override;
     void update(sf::Time deltaTime) override;
