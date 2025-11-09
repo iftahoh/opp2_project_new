@@ -1,4 +1,4 @@
-#include "ResourceGraphic.h"
+﻿#include "ResourceGraphic.h"
 #include <iostream>
 
 
@@ -51,6 +51,10 @@ ResourceGraphic::ResourceGraphic()
     {
         loadTextures(RESOURCES_TEXTURE_PATH[index], RESOURCES_TEXTURE_PATH[index]);
     }
+    for (int index = 0; index < SENERY_TEXTURE_PATH_SIZE; index++)
+    {
+		loadTextures(RESOURCES_SENERY_TEXTURE_PATH[index], RESOURCES_SENERY_TEXTURE_PATH[index]);
+	}
     loadFonts("main_font", "arial");
 	loadFonts("info_font", "info_font");
 }
