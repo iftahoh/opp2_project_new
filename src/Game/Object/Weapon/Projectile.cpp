@@ -1,7 +1,10 @@
-#include "Game/Object/Weapon/Projectile.h"
+﻿#include "Game/Object/Weapon/Projectile.h"
 #include "Game/Object/DynamicObject.h"
+#include "Game/GameController.h"
 
-Projectile::Projectile(b2World& world, const sf::Vector2f& position, Worm* owner) : m_owner(owner) {
+Projectile::Projectile(GameController& controller, b2World& world, sf::Vector2f pos,
+    const std::string& textureKey, float radius)
+    : m_controller(controller), m_lifeTimer(5.f) {
     // Base constructor
 }
 

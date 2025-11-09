@@ -63,7 +63,7 @@ void Grenade::fire(Worm& worm) {
     b2Vec2 impulse(dir.x * FIRE_POWER, dir.y * FIRE_POWER);
     shell->getBody()->ApplyLinearImpulseToCenter(impulse, true);
 
-    controller.addGameObject(std::move(shell));
+   //controller.addGameObject(std::move(shell));
 }
 
 std::string Grenade::getAimingAnimationName() const {

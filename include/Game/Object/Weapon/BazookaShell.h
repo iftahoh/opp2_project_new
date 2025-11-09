@@ -1,23 +1,25 @@
-// include/Game/Object/Weapon/BazookaShell.h
+п»ї// include/Game/Object/Weapon/BazookaShell.h
 
 #pragma once
 #include "Game/Object/Weapon/Projectile.h"
 
+class GameController;
+
 class BazookaShell : public Projectile {
 public:
-    BazookaShell(b2World& world, const sf::Vector2f& position, Worm* owner);
+    BazookaShell(GameController& controller, b2World& world, sf::Vector2f pos);
     void onCollision() override;
     void update(sf::Time deltaTime) override;
     void render(sf::RenderWindow& window) override;
 
 private:
-    // --- двгшеъ згщеъ мфйцех ---
+    // --- Г¤ГўГЈГёГҐГє Г§ГЈГ№ГҐГє Г¬ГґГ©Г¶ГҐГµ ---
     static const int BAZOOKA_DAMAGE = 30;
-    static const float EXPLOSION_RADIUS; // двгшъ дшгйес боишйн щм Box2D
+    static const float EXPLOSION_RADIUS; // Г¤ГўГЈГёГє Г¤ГёГЈГ©ГҐГ± ГЎГ®ГЁГёГ©Г­ Г№Г¬ Box2D
     // ----------------------------
 
     bool m_exploding = false;
-    // щоеш шфшрс мичсиешд бочен аебййчи ома
+    // Г№Г®ГҐГё ГёГґГёГ°Г± Г¬ГЁГ·Г±ГЁГҐГёГ¤ ГЎГ®Г·ГҐГ­ Г ГҐГЎГ©Г©Г·ГЁ Г®Г¬Г 
     sf::Texture& m_explosionTexture;
     sf::IntRect m_explosionRect;
     sf::Time m_explosionTimer;

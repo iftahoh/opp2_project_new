@@ -52,47 +52,133 @@ b2World& GameController::getWorld() {
 }
 
 void GameController::setupWorld() {
-    if (!m_skyTexture.loadFromFile("beach_background.png")) {
-        std::cerr << "Error loading sky texture" << std::endl;
+    if (!m_skyTexture.loadFromFile("beach_background.png")) { //
+        std::cerr << "Error loading sky texture" << std::endl; //
     }
-    m_skySprite.setTexture(m_skyTexture);
-    sf::Vector2u windowSize = m_window.getSize();
-    sf::Vector2u textureSize = m_skyTexture.getSize();
-    m_skySprite.setScale((float)(windowSize.x / textureSize.x), (float)windowSize.y / textureSize.y);
+    m_skySprite.setTexture(m_skyTexture); //
+    sf::Vector2u windowSize = m_window.getSize(); //
+    sf::Vector2u textureSize = m_skyTexture.getSize(); //
+    m_skySprite.setScale((float)(windowSize.x / textureSize.x), (float)windowSize.y / textureSize.y); //
 
     // --- התיקון ---
     // 1. הגדר את גודל עולם המשחק הרצוי. בוא ניצור עולם שרוחבו פי 4 מהחלון.
-    sf::Vector2u worldSize(windowSize.x * 4, windowSize.y);
+    sf::Vector2u worldSize(windowSize.x * 4, windowSize.y); //
 
-    // 2. השתמש בגודל העולם החדש כדי ליצור את השטח.
-    addGameObject(std::make_unique<Terrain>(m_world, worldSize));
+    // 2. ניצור את השטח ונשמור מצביע אליו
+    // (חשוב: הוספנו משתנה מקומי m_terrain כדי שנוכל לגשת אליו)
+    auto terrainPtr = std::make_unique<Terrain>(m_world, worldSize);
+    Terrain* m_terrain = terrainPtr.get(); // שמירת מצביע "גולמי"
+    addGameObject(std::move(terrainPtr)); // העברת הבעלות ל-m_gameObjects
 
-    // --- סוף התיקון ---
+    // =======================================================
+    // ========= קוד פיזור אובייקטים (עם תיקון Y) =========
+    // =======================================================
+
+    std::random_device rd;
+    std::mt19937 gen(rd());
+
+    // הגדרת טווח X
+    std::uniform_real_distribution<> distrX(100.f, static_cast<float>(worldSize.x) - 100.f);
+
+    // (מחקנו את distrY)
+
+    // רשימת הטקסטורות
+    std::vector<std::string> sceneryKeys = { "texture1", "texture2", "texture3", "texture4"};
+
+    // מספר האובייקטים
+    const int numObjectsToSpawn = 15;
+
+    std::uniform_int_distribution<> distrIndex(0, sceneryKeys.size() - 1);
+
+    // רשימה לבדיקת חפיפות
+    std::vector<sf::FloatRect> spawnedObjectBounds;
+    const float PADDING = 20.0f; // מרווח ביטחון
+
+    for (int i = 0; i < numObjectsToSpawn; ++i) {
+
+        int retries = 0;
+        const int MAX_RETRIES = 20; // ננסה למצוא מקום פנוי עד 20 פעם
+        bool positionFound = false;
+
+        while (retries < MAX_RETRIES && !positionFound) {
+            retries++;
+
+            // 1. נבחר טקסטורה אקראית ונקבל את הגודל שלה
+            std::string randomTextureKey = sceneryKeys[distrIndex(gen)];
+            const sf::Texture& texture = ResourceGraphic::getInstance().getTexture(randomTextureKey);
+            sf::Vector2u textureSize = texture.getSize();
+            float objHeight = static_cast<float>(textureSize.y);
+            float objWidth = static_cast<float>(textureSize.x);
+
+            // 2. נבחר X אקראי
+            float randomX = distrX(gen);
+
+            // 3. נשאל את ה-Terrain מה גובה הקרקע ב-X הזה
+            float groundY = m_terrain->getSurfaceY(randomX);
+
+            // 4. נחשב את ה-Y של מרכז האובייקט
+            // (גובה הקרקע פחות חצי גובה האובייקט)
+            float randomY = groundY - (objHeight / 2.f);
+
+            sf::Vector2f randomPos(randomX, randomY);
+
+            // 5. ניצור את ה"תיבה החוסמת" (bounding box)
+            sf::FloatRect newBounds(
+                randomPos.x - (objWidth / 2.f) - PADDING,
+                randomPos.y - (objHeight / 2.f) - PADDING,
+                objWidth + (PADDING * 2),
+                objHeight + (PADDING * 2)
+            );
+
+            // 6. נבדוק אם התיבה החדשה מתנגשת עם תיבות קיימות
+            bool isOverlapping = false;
+            for (const auto& existingBounds : spawnedObjectBounds) {
+                if (newBounds.intersects(existingBounds)) {
+                    isOverlapping = true;
+                    break;
+                }
+            }
+
+            // 7. אם אין התנגשות - מצאנו מקום!
+            if (!isOverlapping) {
+                positionFound = true;
+
+                // ניצור את האובייקט
+                addGameObject(std::make_unique<SceneryObject>(m_world, randomPos, randomTextureKey));
+
+                // ונוסיף את הגבולות שלו לרשימה
+                spawnedObjectBounds.push_back(newBounds);
+            }
+        }
+    }
+    // =======================================================
+    // =================== סוף הקוד החדש ===================
+    // =======================================================
 
     // כעת, נמקם את השחקן הראשון איפשהו בתחילת העולם הגדול.
-    m_players.push_back(std::make_unique<Player>(m_world, *this, sf::Vector2f(200.f, 500.f), sf::Color::Red));
-    m_players.push_back(std::make_unique<Player>(m_world, *this, sf::Vector2f(800.f, 500.f), sf::Color::Green));
-    std::cout << "Players number " << m_players.size() << std::endl;
+    m_players.push_back(std::make_unique<Player>(m_world, *this, sf::Vector2f(200.f, 500.f), sf::Color::Red)); //
+    m_players.push_back(std::make_unique<Player>(m_world, *this, sf::Vector2f(800.f, 500.f), sf::Color::Green)); //
+    std::cout << "Players number " << m_players.size() << std::endl; //
 
     // --- HUD init (משתמש בפונט info_font מה-ResourceGraphic) --- // NEW
     try {
-        auto& font = ResourceGraphic::getInstance().getFont("main_font");
-        m_hudText.setFont(font);
-        m_hudText.setCharacterSize(22);
-        m_hudText.setFillColor(sf::Color::White);
-        m_hudText.setOutlineColor(sf::Color::Black);
-        m_hudText.setOutlineThickness(2.f);
-        m_hudReady = true;
+        auto& font = ResourceGraphic::getInstance().getFont("main_font"); //
+        m_hudText.setFont(font); //
+        m_hudText.setCharacterSize(22); //
+        m_hudText.setFillColor(sf::Color::White); //
+        m_hudText.setOutlineColor(sf::Color::Black); //
+        m_hudText.setOutlineThickness(2.f); //
+        m_hudReady = true; //
     }
     catch (const std::exception& e) {
-        std::cerr << "HUD font load failed: " << e.what() << "\n";
-        m_hudReady = false;
+        std::cerr << "HUD font load failed: " << e.what() << "\n"; //
+        m_hudReady = false; //
     }
 
     // --- התחלת תור ראשון (טיימר) --- // NEW
-    m_currentPlayerIndex = 0;
-    m_turnTimer = m_turnTimeDefault;
-    startTurn();
+    m_currentPlayerIndex = 0; //
+    m_turnTimer = m_turnTimeDefault; //
+    startTurn(); //
 }
 
 void GameController::update(sf::Time deltaTime) {

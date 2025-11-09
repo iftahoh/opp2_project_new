@@ -5,6 +5,9 @@
 #include <vector>
 #include "Game/GameContactListener.h"
 #include <memory>
+#include <random>
+#include <string>
+#include "Game/Object/SceneryObject.h"
 
 class GameObject;
 class Player;

@@ -10,10 +10,8 @@ const float BazookaShell::EXPLOSION_RADIUS = 2.0f;
 
 // --- בנאי ---
 // (הבנאי נשאר כפי שהיה אצלך, ללא שינוי)
-BazookaShell::BazookaShell(b2World& world, const sf::Vector2f& position, Worm* owner)
-    : Projectile(world, position, owner),
-    m_explosionTexture(ResourceGraphic::getInstance().getTexture("firehit")),
-    m_exploding(false)
+BazookaShell::BazookaShell(GameController& controller, b2World& world, sf::Vector2f position)
+    : Projectile(controller, world, position, "bullet", 3.f)
 {
     m_sprite.setTexture(ResourceGraphic::getInstance().getTexture("missil"));
     m_sprite.setOrigin(m_sprite.getLocalBounds().width / 2.f, m_sprite.getLocalBounds().height / 2.f);
