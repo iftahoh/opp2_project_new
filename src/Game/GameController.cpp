@@ -279,6 +279,7 @@ void GameController::endTurn() {
     if (m_players.empty()) return;
     m_currentPlayerIndex = (m_currentPlayerIndex + 1) % static_cast<int>(m_players.size());
     std::cout << "[TURN] Switched to Player " << m_currentPlayerIndex << "\n";
+	startTurn();
 }
 
 
