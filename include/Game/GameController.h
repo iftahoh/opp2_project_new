@@ -26,6 +26,10 @@ public:
     void requestEndTurn();  // קרא לזה כששחקן השתמש בנשק ורוצים לסיים תור
     void startTurn();   // איפוס טיימר/התחלת תור
     void endTurn();
+
+    void setCameraFollowTarget(GameObject* target);
+    void setTurnActionInProgress(bool status);
+
 private:
     void handleEvents();
     void update(sf::Time deltaTime);
@@ -51,6 +55,7 @@ private:
     float m_turnTimer = 30.f;  // הטיימר שרץ בפועל
 
     bool m_endTurnRequested = false; // דגל פנימי לבקשת סיום תור
+
 
     // -------- HUD -------- // NEW
     sf::Text m_hudText;          // טקסט ל-HUD

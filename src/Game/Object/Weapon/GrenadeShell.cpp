@@ -6,7 +6,7 @@
 #include <iostream>
 
 // הגדרת רדיוס הפיצוץ במטרים של Box2D (שווה בערך ל-60 פיקסלים)
-const float GrenadeShell::EXPLOSION_RADIUS = 2.0f;
+const float GrenadeShell::EXPLOSION_RADIUS = 5.0f;
 
 // --- בנאי ---
 // (הבנאי נשאר כפי שהיה אצלך, ללא שינוי)
@@ -45,57 +45,63 @@ GrenadeShell::GrenadeShell(GameController& controller, b2World& world, sf::Vecto
 
 
 // --- פונקציה שנקראת בעת התנגשות ---
-void GrenadeShell::onCollision() {
-	if (!m_exploding) return; // אם לא בפיצוץ, לא לעשות כלום
-    // --- לוגיקת הנזק החדשה ---
-    b2World* world = m_body->GetWorld();
-    b2Vec2 explosionCenter = m_body->GetPosition();
-
-    // הגדרת התיבה התוחמת לחיפוש אובייקטים מסביב לפיצוץ
-    b2AABB aabb;
-    aabb.lowerBound = explosionCenter - b2Vec2(EXPLOSION_RADIUS, EXPLOSION_RADIUS);
-    aabb.upperBound = explosionCenter + b2Vec2(EXPLOSION_RADIUS, EXPLOSION_RADIUS);
-
-    // ניצור Callback (פונקציית משוב) שתופעל עבור כל גוף שנמצא בתיבה
-    class ExplosionQueryCallback : public b2QueryCallback {
-    public:
-        ExplosionQueryCallback(const b2Vec2& center, float radius)
-            : m_center(center), m_radius(radius) {
-        }
-
-        bool ReportFixture(b2Fixture* fixture) override {
-            b2Body* body = fixture->GetBody();
-            GameObject* gameObject = reinterpret_cast<GameObject*>(body->GetUserData().pointer);
-
-            // נבדוק אם האובייקט הוא תולעת
-            if (auto worm = dynamic_cast<Worm*>(gameObject)) {
-                b2Vec2 wormPos = body->GetPosition();
-                float distance = b2Distance(m_center, wormPos);
-
-                // אם התולעת בתוך רדיוס הפיצוץ, היא נפגעת
-                if (distance < m_radius) {
-                    worm->takeDamage(GRENADE_DAMAGE);
-                }
-            }
-            return true; // להמשיך לחפש עוד אובייקטים
-        }
-    private:
-        b2Vec2 m_center;
-        float m_radius;
-    };
-
-    ExplosionQueryCallback callback(explosionCenter, EXPLOSION_RADIUS);
-    world->QueryAABB(&callback, aabb); // הרצת החיפוש בעולם הפיזיקלי
-}
+void GrenadeShell::onCollision() {}
 
 
 // --- פונקציית העדכון ---
+// --- פונקציית העדכון ---
 void GrenadeShell::update(sf::Time deltaTime) {
-	m_lifetime += deltaTime;
-    if(m_lifetime >= m_detonationTime) {
+    m_lifetime += deltaTime;
+
+    // בדוק אם הגיע הזמן להתפוצץ וזו הפעם הראשונה (טרם התפוצץ)
+    if (m_lifetime >= m_detonationTime && !m_exploding)
+    {
         m_exploding = true; // הפעלת מצב פיצוץ
-	}
-    
+        m_explosionTimer = sf::Time::Zero; // איפוס טיימר אנימציה
+
+        // --- כאן מתחילה לוגיקת הנזק שהועברה ---
+        // (זה הקוד שגזרנו קודם מ-onCollision)
+        b2World* world = m_body->GetWorld();
+        b2Vec2 explosionCenter = m_body->GetPosition();
+
+        // הגדרת התיבה התוחמת לחיפוש אובייקטים מסביב לפיצוץ
+        b2AABB aabb;
+        aabb.lowerBound = explosionCenter - b2Vec2(EXPLOSION_RADIUS, EXPLOSION_RADIUS);
+        aabb.upperBound = explosionCenter + b2Vec2(EXPLOSION_RADIUS, EXPLOSION_RADIUS);
+
+        // ניצור Callback (פונקציית משוב) שתופעל עבור כל גוף שנמצא בתיבה
+        class ExplosionQueryCallback : public b2QueryCallback {
+        public:
+            ExplosionQueryCallback(const b2Vec2& center, float radius)
+                : m_center(center), m_radius(radius) {
+            }
+
+            bool ReportFixture(b2Fixture* fixture) override {
+                b2Body* body = fixture->GetBody();
+                GameObject* gameObject = reinterpret_cast<GameObject*>(body->GetUserData().pointer);
+
+                // נבדוק אם האובייקט הוא תולעת
+                if (auto worm = dynamic_cast<Worm*>(gameObject)) {
+                    b2Vec2 wormPos = body->GetPosition();
+                    float distance = b2Distance(m_center, wormPos);
+
+                    // אם התולעת בתוך רדיוס הפיצוץ, היא נפגעת
+                    if (distance < m_radius) {
+                        worm->takeDamage(GRENADE_DAMAGE);
+                    }
+                }
+                return true; // להמשיך לחפש עוד אובייקטים
+            }
+        private:
+            b2Vec2 m_center;
+            float m_radius;
+        };
+
+        ExplosionQueryCallback callback(explosionCenter, EXPLOSION_RADIUS);
+        world->QueryAABB(&callback, aabb); // הרצת החיפוש בעולם הפיזיקלי
+        // --- סוף לוגיקת הנזק ---
+    }
+
     if (m_exploding) {
         // הפיכת הגוף לסטטי כדי שלא יזוז בזמן הפיצוץ
         if (m_body && m_body->GetType() == b2_dynamicBody) {
@@ -107,7 +113,8 @@ void GrenadeShell::update(sf::Time deltaTime) {
         int frame = static_cast<int>(m_explosionTimer.asSeconds() / 0.1f);
 
         if (frame >= 8) {
-            m_isDead = true; // סימון להסרה
+            // m_isDead = true; // <-- זו היתה הבעיה
+            hit(); // <-- זה התיקון לבקשת סיום תור
         }
         else {
             // עדכון אנימציית הפיצוץ
