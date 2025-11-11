@@ -4,6 +4,7 @@
 #include "ResourceGraphic.h"                 // NEW: כדי להשתמש בפונט הטעון
 #include <iostream>
 
+std::uniform_int_distribution<> distrX(2000.f, 3200.f);
 // בקובץ GameController.cpp
 GameController::GameController(sf::RenderWindow& window)
     : m_window(window),
@@ -155,9 +156,11 @@ void GameController::setupWorld() {
     // =================== סוף הקוד החדש ===================
     // =======================================================
 
-    // כעת, נמקם את השחקן הראשון איפשהו בתחילת העולם הגדול.
-    m_players.push_back(std::make_unique<Player>(m_world, *this, sf::Vector2f(200.f, 500.f), sf::Color::Red)); //
-    m_players.push_back(std::make_unique<Player>(m_world, *this, sf::Vector2f(800.f, 500.f), sf::Color::Green)); //
+    //מיקום שחקנים על המפה 
+	float groundX = distrX(gen);
+    m_players.push_back(std::make_unique<Player>(m_world, *this, sf::Vector2f(groundX, 500.f), sf::Color::Red)); //
+	groundX = distrX(gen);
+    m_players.push_back(std::make_unique<Player>(m_world, *this, sf::Vector2f(groundX, 500.f), sf::Color::Green)); //
     std::cout << "Players number " << m_players.size() << std::endl; //
 
     // --- HUD init (משתמש בפונט info_font מה-ResourceGraphic) --- // NEW

@@ -4,13 +4,18 @@
 #include "Game/Object/Weapon/Grenade.h"
 #include <iostream>
 
+std::uniform_real_distribution<> distrX(-1900.f, 1900.f);
+std::random_device rd;
+std::mt19937 gen(rd());
+
 const int NUM_WORMS_PER_PLAYER = 5;
 
 Player::Player(b2World& world, GameController& gameController, const sf::Vector2f& basePosition, sf::Color color)
 	: m_currentWormIndex(0), m_gameController(gameController), m_color(color) {
 
     for (int i = 0; i < NUM_WORMS_PER_PLAYER; ++i) {
-        sf::Vector2f wormPos = basePosition + sf::Vector2f(i * 50.f, 0.f);
+        float randomOffsetX = distrX(gen);
+        sf::Vector2f wormPos = basePosition + sf::Vector2f(randomOffsetX, 0.f);
 
         const float y_offset = 3.0f * b2_linearSlop * 30.0f;
         wormPos.y += y_offset;
