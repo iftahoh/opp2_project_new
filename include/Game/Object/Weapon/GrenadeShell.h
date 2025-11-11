@@ -5,7 +5,7 @@
 
 class GrenadeShell : public Projectile {
 public:
-    GrenadeShell(b2World& world, const sf::Vector2f& position, Worm* owner);
+    GrenadeShell(GameController& controller, b2World& world, sf::Vector2f pos);
     void onCollision() override;
     void update(sf::Time deltaTime) override;
     void render(sf::RenderWindow& window) override;

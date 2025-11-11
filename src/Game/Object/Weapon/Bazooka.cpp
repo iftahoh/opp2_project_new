@@ -59,12 +59,12 @@ void Bazooka::fire(Worm& worm) {
     // éåöøéí àú ä÷ìéò áîé÷åí çãù åîøåç÷ éåúø
     sf::Vector2f startPos = wormPos + dir * SPAWN_OFFSET;
 
-    auto shell = std::make_unique<BazookaShell>(controller.getWorld(), startPos, &worm);
+    auto shell = std::make_unique<BazookaShell>(controller, controller.getWorld(), startPos);
 
     b2Vec2 impulse(dir.x * FIRE_POWER, dir.y * FIRE_POWER);
     shell->getBody()->ApplyLinearImpulseToCenter(impulse, true);
 
-    //controller.addGameObject(std::move(shell));
+    controller.addGameObject(std::move(shell));
 }
 
 std::string Bazooka::getAimingAnimationName() const {

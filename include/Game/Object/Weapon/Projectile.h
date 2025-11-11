@@ -1,6 +1,4 @@
-﻿// include/Game/Object/Weapon/Projectile.h
-
-#pragma once
+﻿#pragma once
 #include "Game/Object/DynamicObject.h"
 
 class Worm;
@@ -18,10 +16,12 @@ public:
 
     void update(sf::Time deltaTime) override;
     void render(sf::RenderWindow& window) override;
+    void hit();
     Worm* getOwner() const;
 
 protected:
     Worm* m_owner; 
     GameController& m_controller;
+	float m_lifeTimer; // lifetime in seconds
     static constexpr float SCALE = 30.0f;
 };

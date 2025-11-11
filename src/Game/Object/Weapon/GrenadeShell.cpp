@@ -10,8 +10,8 @@ const float GrenadeShell::EXPLOSION_RADIUS = 2.0f;
 
 // --- בנאי ---
 // (הבנאי נשאר כפי שהיה אצלך, ללא שינוי)
-GrenadeShell::GrenadeShell(b2World& world, const sf::Vector2f& position, Worm* owner)
-    : Projectile(world, position, owner),
+GrenadeShell::GrenadeShell(GameController& controller, b2World& world, sf::Vector2f position)
+    : Projectile(controller, world, position, "grenade", 5.f),
     m_explosionTexture(ResourceGraphic::getInstance().getTexture("firehit")),
     m_exploding(false)
 {

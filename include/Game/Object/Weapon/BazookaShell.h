@@ -1,9 +1,6 @@
-﻿// include/Game/Object/Weapon/BazookaShell.h
-
-#pragma once
+﻿#pragma once
 #include "Game/Object/Weapon/Projectile.h"
-
-class GameController;
+#include "Game/GameController.h"
 
 class BazookaShell : public Projectile {
 public:

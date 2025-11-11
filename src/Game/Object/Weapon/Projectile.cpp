@@ -16,6 +16,17 @@ void Projectile::render(sf::RenderWindow& window) {
     window.draw(m_sprite);
 }
 
+void Projectile::hit() {
+    // הוספת בדיקה למניעת קריאות כפולות (מומלץ)
+    if (m_isDead) return;
+
+    m_isDead = true; //
+
+    // --- הוסף את השורה הבאה ---
+    // זה יסמן לבקר המשחק לסיים את התור בפריים הבא
+    m_controller.requestEndTurn();
+}
+
 Worm* Projectile::getOwner() const
 {
     return m_owner;
