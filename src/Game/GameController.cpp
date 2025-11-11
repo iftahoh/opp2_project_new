@@ -9,7 +9,7 @@ GameController::GameController(sf::RenderWindow& window)
     : m_window(window),
     m_world(b2Vec2(0.0f, 9.8f)), // m_world הוא אכן ה-b2World, מצוין!
     m_cameraView(sf::FloatRect(0, 0, window.getSize().x, window.getSize().y)),
-    m_currentPlayerIndex(0)
+    m_currentPlayerIndex(0), m_cameraTarget(nullptr)
 {
     m_world.SetContactListener(&m_contactListener);
     setupWorld(); // הפונקציה הזו יוצרת את הטריין ושאר האובייקטים
@@ -367,7 +367,6 @@ void GameController::endTurn() {
     std::cout << "[TURN] Switched to Player " << m_currentPlayerIndex << "\n";
 	startTurn();
 }
-
 
 void GameController::requestEndTurn() {
     m_endTurnRequested = true;

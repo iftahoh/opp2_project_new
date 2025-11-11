@@ -27,9 +27,6 @@ public:
     void startTurn();   // איפוס טיימר/התחלת תור
     void endTurn();
 
-    void setCameraFollowTarget(GameObject* target);
-    void setTurnActionInProgress(bool status);
-
 private:
     void handleEvents();
     void update(sf::Time deltaTime);
@@ -55,6 +52,7 @@ private:
     float m_turnTimer = 30.f;  // הטיימר שרץ בפועל
 
     bool m_endTurnRequested = false; // דגל פנימי לבקשת סיום תור
+    DynamicObject* m_cameraTarget; // <-- המטרה החדשה למעקב
 
 
     // -------- HUD -------- // NEW

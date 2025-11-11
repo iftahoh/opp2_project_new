@@ -107,7 +107,7 @@ void BazookaShell::update(sf::Time deltaTime) {
         int frame = static_cast<int>(m_explosionTimer.asSeconds() / 0.1f);
 
         if (frame >= 8) {
-            m_isDead = true; // סימון להסרה
+            hit();
         }
         else {
             // עדכון אנימציית הפיצוץ

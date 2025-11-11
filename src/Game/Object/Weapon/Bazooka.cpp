@@ -33,7 +33,7 @@ void Bazooka::handleInput(const sf::Event& event, Worm& worm) {
             fire(worm);
             worm.setState(std::make_unique<WormIdleState>());
             // >>> סיום תור אחרי שימוש בנשק:
-            worm.getGameController().endTurn();
+            //worm.getGameController().endTurn();
         }
     }
 }
