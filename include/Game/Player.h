@@ -22,8 +22,8 @@ public:
     const std::vector<std::string>& getWeaponInventory() const;
     int getSelectedWeaponIndex() const;
 
-private:
     void nextWorm();
+private:
 
     std::vector<Worm*> m_worms;
     int m_currentWormIndex;

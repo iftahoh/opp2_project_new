@@ -477,6 +477,7 @@ void GameController::startTurn() {
     if (m_players.empty()) return;
     m_turnTimer = m_turnTimeDefault; // איפוס הטיימר לתור
     std::cout << "[TURN] Player " << m_currentPlayerIndex << " started\n";
+	m_players[m_currentPlayerIndex]->nextWorm(); // מעבר לתולעת הבאה
 }
 
 void GameController::endTurn() {
