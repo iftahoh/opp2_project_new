@@ -1,7 +1,7 @@
 ﻿cmake_minimum_required (VERSION 3.26)
 
 project (oop2_project)
-set (MY_AUTHORS "Alexey_Laikov-Talia_Barzilai-Iftah_Ohayon")
+set (MY_AUTHORS "Iftah_Ohayon-Talia_Barzilai-Alexey_Laikov")
 
 include (cmake/CompilerSettings.cmake)
 
