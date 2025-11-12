@@ -52,7 +52,10 @@ Player::Player(b2World& world, GameController& gameController, const sf::Vector2
 void Player::handleInput(const sf::Event& event) {
     if (event.type == sf::Event::KeyPressed) {
         // --- עדכון לוגיקה ---
-
+        if (event.key.code == sf::Keyboard::Tab) {
+            nextWorm();
+            return; // חשוב: נחזיר כדי שהאירוע לא ימשיך להתולעת
+        }
         // החלפת נשק (למשל מקש 1 ו-2)
         if (event.key.code == sf::Keyboard::Num1) {
             if (m_weaponInventory.size() > 0) m_selectedWeaponIndex = 0;
