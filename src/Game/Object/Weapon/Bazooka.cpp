@@ -32,8 +32,6 @@ void Bazooka::handleInput(const sf::Event& event, Worm& worm) {
         if (event.mouseButton.button == sf::Mouse::Left) {
             fire(worm);
             worm.setState(std::make_unique<WormIdleState>());
-            // >>> סיום תור אחרי שימוש בנשק:
-            //worm.getGameController().endTurn();
         }
     }
 }
@@ -68,7 +66,7 @@ void Bazooka::fire(Worm& worm) {
 }
 
 std::string Bazooka::getAimingAnimationName() const {
-    return "bazooka_aim";
+    return "bazooka_idle";
 }
 
 std::string Bazooka::getIdleAnimationName() const {

@@ -20,7 +20,7 @@ public:
     Worm* getOwner() const;
 
 protected:
-    Worm* m_owner; 
+    Worm* m_owner;
     GameController& m_controller;
 	float m_lifeTimer; // lifetime in seconds
     static constexpr float SCALE = 30.0f;
