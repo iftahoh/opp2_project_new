@@ -8,6 +8,7 @@
 #include <iostream>
 #include <stdexcept>
 #include "ResourceGraphic.h"
+#include "AudioManager.h"
 
 // ááðàé, ðèòï ø÷ îùàáéí åðàôñ àú äãâì
 MainMenuScreenState::MainMenuScreenState() : m_isPositionsSet(false) {
@@ -60,7 +61,7 @@ void MainMenuScreenState::render(sf::RenderWindow& window) {
 		setupPositions(window); // òëùéå ä÷øéàä ú÷éðä
 		m_isPositionsSet = true;
 	}
-
+	AudioManager::getInstance().playMusic("menu_music");
 	// òëùéå ðöééø äëì
 	window.draw(background);
 	startGameButton.render(window);
@@ -77,11 +78,11 @@ void MainMenuScreenState::handleInput(sf::Event& event, sf::RenderWindow& window
 }
 
 void MainMenuScreenState::onEnter(MenuManager* manager) {
-	// ÷øéàä îôåøùú ìôåð÷öéä ùì îçì÷ú äàá
-	// æä éáèéç ùäîùúðä m_manager é÷áì àú äòøê äðëåï
+	
 	MenuScreenState::onEnter(manager);
+	AudioManager::getInstance().playMusic("menu_music");
 }
 
 void MainMenuScreenState::onExit() {
-	// ìåâé÷ä ùøöä áéöéàä îäîñê
+	
 }

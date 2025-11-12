@@ -4,6 +4,7 @@
 #include <stack>
 #include <memory>
 #include <type_traits>
+#include <SFML/Audio.hpp>
 #include <SFML/Graphics.hpp> // הוספנו את זה כאן
 
 class MenuManager {

@@ -1,7 +1,8 @@
 ﻿#include "Game/GameController.h"
 #include "Game/Object/Terrain.h"
 #include "Game/Player.h"
-#include "ResourceGraphic.h"                 // NEW: כדי להשתמש בפונט הטעון
+#include "ResourceGraphic.h"
+#include "AudioManager.h"
 #include <iostream>
 #include <Menu/SettingsManager.h>
 
@@ -157,6 +158,7 @@ void GameController::setupWorld() {
     // =======================================================
     // =================== סוף הקוד החדש ===================
     // =======================================================
+    AudioManager::getInstance().playMusic("game_music");
 	int numOfWorms = SettingsManager::getInstance().getWormsPerPlayer(); //
     //מיקום שחקנים על המפה 
 	float groundX = distrX(gen);
