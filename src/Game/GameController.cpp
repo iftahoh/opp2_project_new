@@ -6,7 +6,7 @@
 #include <iostream>
 #include <Menu/SettingsManager.h>
 
-std::uniform_int_distribution<> distrX(2000.f, 3200.f);
+std::uniform_int_distribution<> distrX(1500.f, 2200.f);
 // בקובץ GameController.cpp
 GameController::GameController(sf::RenderWindow& window)
     : m_window(window),
@@ -87,7 +87,7 @@ void GameController::setupWorld() {
     // (מחקנו את distrY)
 
     // רשימת הטקסטורות
-    std::vector<std::string> sceneryKeys = { "texture1", "texture2", "texture3", "texture4"};
+    std::vector<std::string> sceneryKeys = {"texture1", "texture2", "texture3", "texture4", "texture5", "texture6", "texture7"};
 
     // מספר האובייקטים
     const int numObjectsToSpawn = 15;

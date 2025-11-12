@@ -4,7 +4,7 @@
 #include "Game/Object/Weapon/Grenade.h"
 #include <iostream>
 
-std::uniform_real_distribution<> distrX(-1900.f, 1900.f);
+std::uniform_real_distribution<> distrX(-1500.f, 1500.f);
 std::random_device rd;
 std::mt19937 gen(rd());
 

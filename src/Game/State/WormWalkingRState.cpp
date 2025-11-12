@@ -1,11 +1,11 @@
-#include "Game/State/WormWalkingRState.h"
+ο»Ώ#include "Game/State/WormWalkingRState.h"
 #include "Game/State/WormIdleState.h"
 #include "Game/Object/Worm.h"
 #include "Game/State/WormJumpState.h"
 
 namespace {
-    // χεαςιν ξδιψεϊ δμιλδ χαεςδ αιηιγεϊ ωμ Box2D
-    const float WALK_SPEED = 3.f;
+    // Γ·Γ¥Γ΅Γ²Γ©Γ­ Γ®Γ¤Γ©ΓΈΓ¥ΓΊ Γ¤Γ¬Γ©Γ«Γ¤ Γ·Γ΅Γ¥Γ²Γ¤ Γ΅Γ©Γ§Γ©Γ£Γ¥ΓΊ ΓΉΓ¬ Box2D
+    const float WALK_SPEED = 2.f;
 }
 
 void WormWalkingRState::onEnter(Worm& worm) {
@@ -29,10 +29,10 @@ void WormWalkingRState::handleInput(Worm& worm, const sf::Event& event) {
 
     if (!isMoving) {
         worm.setState(std::make_unique<WormIdleState>());
-        return; // ιεφΰιν λγι μΰ μαγεχ χτιφδ ΰν λαψ δημτπε ξφα
+        return; // Γ©Γ¥Γ¶Γ Γ©Γ­ Γ«Γ£Γ© Γ¬Γ  Γ¬Γ΅Γ£Γ¥Γ· Γ·Γ΄Γ©Γ¶Γ¤ Γ Γ­ Γ«Γ΅ΓΈ Γ¤Γ§Γ¬Γ΄Γ°Γ¥ Γ®Γ¶Γ΅
     }
 
-    // αγιχϊ χτιφδ αζξο δμιλδ
+    // Γ΅Γ£Γ©Γ·ΓΊ Γ·Γ΄Γ©Γ¶Γ¤ Γ΅Γ¦Γ®Γ― Γ¤Γ¬Γ©Γ«Γ¤
     if (event.type == sf::Event::KeyPressed && event.key.code == sf::Keyboard::Space) {
         if (worm.canJump()) {
             worm.setState(std::make_unique<WormJumpState>());
@@ -41,10 +41,10 @@ void WormWalkingRState::handleInput(Worm& worm, const sf::Event& event) {
 }
 
 void WormWalkingRState::update(Worm& worm, sf::Time deltaTime) {
-    // ΰιο φεψκ αμεβιχδ ξιεηγϊ λΰο
+    // Γ Γ©Γ― Γ¶Γ¥ΓΈΓª Γ΅Γ¬Γ¥ΓΆΓ©Γ·Γ¤ Γ®Γ©Γ¥Γ§Γ£ΓΊ Γ«Γ Γ―
 }
 
 void WormWalkingRState::onExit(Worm& worm) {
-    // αιφιΰδ ξξφα δμιλδ, ςεφψιν ΰϊ δϊπεςδ δΰετχιϊ μημεθιο
+    // Γ΅Γ©Γ¶Γ©Γ Γ¤ Γ®Γ®Γ¶Γ΅ Γ¤Γ¬Γ©Γ«Γ¤, Γ²Γ¥Γ¶ΓΈΓ©Γ­ Γ ΓΊ Γ¤ΓΊΓ°Γ¥Γ²Γ¤ Γ¤Γ Γ¥Γ΄Γ·Γ©ΓΊ Γ¬Γ§Γ¬Γ¥Γ¨Γ©Γ―
     worm.setHorizontalVelocity(0.0f);
 }
