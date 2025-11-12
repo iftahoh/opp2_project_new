@@ -2,6 +2,10 @@
 
 #include <string>
 
+/*
+SettingsManager class that manages game settings using the singleton pattern.
+*/
+
 class SettingsManager {
 public:
     // פונקציה סטטית לקבלת המופע היחיד של המחלקה

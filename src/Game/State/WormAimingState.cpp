@@ -18,7 +18,6 @@ void WormAimingState::handleInput(Worm& worm, const sf::Event& event) {
 }
 
 void WormAimingState::update(Worm& worm, sf::Time deltaTime) {
-    // No update logic for now
 }
 
 void WormAimingState::render(sf::RenderWindow& window, Worm& worm) {

@@ -1,6 +1,11 @@
-#pragma once
+﻿#pragma once
+
 #include <SFML/Graphics.hpp>
 #include <SFML/System/Time.hpp>
+
+/*
+IWormState interface representing the state of a Worm object.
+*/
 
 class Worm;
 

@@ -1,4 +1,4 @@
-#include <SFML/Graphics.hpp>
+﻿#include <SFML/Graphics.hpp>
 #include "Menu/MenuManager.h"
 #include "Menu/MainMenuScreenState.h"
 
@@ -20,11 +20,9 @@ int main()
 
             menuManager.handleInput(event, window);
         }
-
         window.clear(sf::Color::Black);
         menuManager.render(window);
         window.display();
     }
-
     return 0;
 }

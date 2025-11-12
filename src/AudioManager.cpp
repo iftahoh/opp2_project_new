@@ -1,11 +1,10 @@
-#include "AudioManager.h"
+ן»¿#include "AudioManager.h"
 
 AudioManager& AudioManager::getInstance() {
     static AudioManager instance;
     return instance;
 }
 
-// הבנאי הפרטי יטען מראש את הנתיכים למוזיקה
 AudioManager::AudioManager() : m_currentMusicName("") {
 
 
@@ -24,7 +23,6 @@ void AudioManager::loadMusic(const std::string& name, const std::string& filenam
 }
 
 void AudioManager::playMusic(const std::string& name, bool loop, float volume) {
-    // אם המוזיקה הזו כבר מתנגנת, אל תתחיל אותה מחדש
     if (m_currentMusicName == name && m_currentMusic.getStatus() == sf::Music::Playing) {
         return;
     }
@@ -45,10 +43,10 @@ void AudioManager::playMusic(const std::string& name, bool loop, float volume) {
     m_currentMusic.setVolume(volume);
     m_currentMusic.play();
 
-    m_currentMusicName = name; // שמור את שם הרצועה שמתנגנת
+    m_currentMusicName = name;
 }
 
 void AudioManager::stopMusic() {
     m_currentMusic.stop();
-    m_currentMusicName = ""; // אפס את השם
+    m_currentMusicName = "";
 }

@@ -1,10 +1,13 @@
 ﻿#pragma once
-#include "Menu/ICommand.h" // ודא שיש לך את ה-include הנכון
+#include "Menu/ICommand.h"
 #include "Menu/SettingsManager.h"
+
+/*
+IncreaseWormsCommand class that implements the ICommand interface
+*/
 
 class IncreaseWormsCommand : public ICommand {
 public:
-    // בדרך כלל ב-ICommand יש פונקציית execute
     void execute() override {
         auto& settings = SettingsManager::getInstance();
         int currentWorms = settings.getWormsPerPlayer();

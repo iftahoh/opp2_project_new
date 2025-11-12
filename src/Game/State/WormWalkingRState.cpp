@@ -4,7 +4,6 @@
 #include "Game/State/WormJumpState.h"
 
 namespace {
-    // ÷åáòéí îäéøåú äìéëä ÷áåòä áéçéãåú ùì Box2D
     const float WALK_SPEED = 2.f;
 }
 
@@ -29,10 +28,9 @@ void WormWalkingRState::handleInput(Worm& worm, const sf::Event& event) {
 
     if (!isMoving) {
         worm.setState(std::make_unique<WormIdleState>());
-        return; // éåöàéí ëãé ìà ìáãå÷ ÷ôéöä àí ëáø äçìôðå îöá
+        return;
     }
 
-    // áãé÷ú ÷ôéöä áæîï äìéëä
     if (event.type == sf::Event::KeyPressed && event.key.code == sf::Keyboard::Space) {
         if (worm.canJump()) {
             worm.setState(std::make_unique<WormJumpState>());
@@ -41,10 +39,8 @@ void WormWalkingRState::handleInput(Worm& worm, const sf::Event& event) {
 }
 
 void WormWalkingRState::update(Worm& worm, sf::Time deltaTime) {
-    // àéï öåøê áìåâé÷ä îéåçãú ëàï
 }
 
 void WormWalkingRState::onExit(Worm& worm) {
-    // áéöéàä îîöá äìéëä, òåöøéí àú äúðåòä äàåô÷éú ìçìåèéï
     worm.setHorizontalVelocity(0.0f);
 }

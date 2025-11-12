@@ -1,5 +1,5 @@
-// include/GameObjects/Ball.h
-#pragma once
+﻿#pragma once
+
 #include "Game/Object/DynamicObject.h"
 
 class Ball : public DynamicObject {

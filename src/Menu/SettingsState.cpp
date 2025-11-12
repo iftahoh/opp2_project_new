@@ -3,7 +3,7 @@
 #include "ResourceGraphic.h"
 #include "Menu/SettingsManager.h"
 #include "Menu/IncreaseWormsCommand.h"
-#include "Menu/DecreseWormsCommand.h"// ודא שהוספת את ה-include הזה
+#include "Menu/DecreseWormsCommand.h"
 #include <iostream>
 
 SettingsState::SettingsState() : m_isPositionsSet(false) {}
@@ -38,7 +38,6 @@ void SettingsState::setupPositions(const sf::RenderWindow& window) {
     m_wormsValueText.setCharacterSize(40);
     m_wormsValueText.setPosition(valueX + 35.f, currentY + 3.f);
 
-    // (שאר הקוד שלך נשאר אותו דבר)
     m_wormsDownButton.setup(L"-", m_textFont, { valueX - 50.f, currentY + 10.f }, smallButtonSize);
 	m_wormsDownButton.setCommand(std::make_unique<class DecreseWormsCommand>());
     m_wormsUpButton.setup(L"+", m_textFont, { valueX + 100.f, currentY + 10.f }, smallButtonSize);
@@ -66,11 +65,10 @@ void SettingsState::render(sf::RenderWindow& window) {
     bg.setTexture(m_settingsImage);
     sf::Vector2u textureSize = m_settingsImage.getSize();
 
-    // çéùåá ÷ðä îéãä - úîìà àú ëì äçìåï (âí àí æä îòååú)
     float scaleX = static_cast<float>(WINDOW_WIDTH) / textureSize.x;
     float scaleY = static_cast<float>(WINDOW_HEIGHT) / textureSize.y;
 
-	updateTextValues(); // עדכון התצוגה של מספר התולעים
+	updateTextValues();
     bg.setScale(scaleX, scaleY);
     window.draw(bg);
 	window.draw(m_wormsLabel);
@@ -87,5 +85,5 @@ void SettingsState::handleInput(sf::Event& event, sf::RenderWindow& window) {
 }
 
 void SettingsState::onExit() {
-    // ריק
+    
 }

@@ -1,6 +1,4 @@
-﻿// include/Game/Object/Worm.h
-
-#pragma once
+﻿#pragma once
 
 #include "Game/Object/DynamicObject.h"
 #include "Game/State/IWormState.h"
@@ -36,7 +34,6 @@ public:
     GameController& getGameController();
     const sf::Sprite& getSprite() const { return m_sprite; }
 
-    // --- äåñôðå ôåð÷öéä ìäåøãú çééí ---
     void takeDamage(int amount);
     bool isGrave() const;
    
@@ -49,7 +46,6 @@ private:
     void loadAnimation(const std::string& name, const sf::Texture& texture, int frameCount);
     int frameNumber(sf::Texture currTexture) const;
 
-    // --- äåñôðå ôåð÷öéä ìòãëåï îã äçééí ---
     void updateHealthBar();
 
     GameController& m_gameController;
@@ -59,12 +55,10 @@ private:
     int m_jumpsLeft;
     static const int MAX_JUMPS = 2;
 
-    // --- äåñôðå îùúðéí ìîã äçééí ---
     int m_health = MAX_HEALTH;
     static const int MAX_HEALTH = 100;
     sf::RectangleShape m_healthBarBackground;
     sf::RectangleShape m_healthBarForeground;
-    // ------------------------------------
 
     std::map<std::string, std::vector<sf::IntRect>> m_animations;
     const std::vector<sf::IntRect>* m_currentAnimation;

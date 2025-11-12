@@ -4,7 +4,7 @@
 #include "Game/Object/Weapon/Grenade.h"
 #include <iostream>
 
-std::uniform_real_distribution<> distrX(-1500.f, 1500.f);
+std::uniform_real_distribution<> distrX(-800.f, 800.f);
 std::random_device rd;
 std::mt19937 gen(rd());
 
@@ -54,20 +54,19 @@ void Player::handleInput(const sf::Event& event) {
         // --- עדכון לוגיקה ---
         if (event.key.code == sf::Keyboard::Tab) {
             nextWorm();
-            return; // חשוב: נחזיר כדי שהאירוע לא ימשיך להתולעת
+            return; 
         }
-        // החלפת נשק (למשל מקש 1 ו-2)
+      
         if (event.key.code == sf::Keyboard::Num1) {
             if (m_weaponInventory.size() > 0) m_selectedWeaponIndex = 0;
-            return; // סיימנו טיפול בקלט
+            return;
         }
         if (event.key.code == sf::Keyboard::Num2) {
             if (m_weaponInventory.size() > 1) m_selectedWeaponIndex = 1;
-            return; // סיימנו טיפול בקלט
+            return;
         }
-        // (אפשר להוסיף 3, 4 וכו' בהמשך)
+       
 
-        // מקש לציוד הנשק (למשל LShift)
         if (event.key.code == sf::Keyboard::LShift) {
             if (m_worms.empty() || m_weaponInventory.empty()) return;
 
@@ -81,15 +80,12 @@ void Player::handleInput(const sf::Event& event) {
             else if (selectedWeaponName == "Grenade") {
                 weaponToEquip = std::make_unique<Grenade>();
             }
-            // (נוסיף עוד 'else if' לנשקים עתידיים)
 
-            // נצייד את התולעת הפעילה
             if (weaponToEquip) {
                 m_worms[m_currentWormIndex]->equipWeapon(std::move(weaponToEquip));
             }
             return;
         }
-        // --- סוף עדכון ---
     }
 
     if (!m_worms.empty()) {

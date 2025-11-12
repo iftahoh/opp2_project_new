@@ -5,16 +5,14 @@
 
 // מימוש הגישה לסינגלטון
 SettingsManager& SettingsManager::getInstance() {
-    static SettingsManager instance; // האובייקט נוצר כאן, פעם אחת בלבד
+    static SettingsManager instance;
     return instance;
 }
 
 // בנאי: קובע את ערכי ברירת המחדל
-SettingsManager::SettingsManager() : m_wormsPerPlayer(3) { // ברירת מחדל: 3 תולעים
-    //loadSettings(); // מייד בהפעלה, ננסה לטעון הגדרות שמורות
+SettingsManager::SettingsManager() : m_wormsPerPlayer(3) {
 }
 
-// --- מימוש הפונקציות ---
 
 void SettingsManager::setWormsPerPlayer(int count) {
     // בדיקת תקינות בסיסית

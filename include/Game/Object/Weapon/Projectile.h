@@ -1,4 +1,5 @@
 ﻿#pragma once
+
 #include "Game/Object/DynamicObject.h"
 
 class Worm;

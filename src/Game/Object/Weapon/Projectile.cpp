@@ -5,7 +5,6 @@
 Projectile::Projectile(GameController& controller, b2World& world, sf::Vector2f pos,
     const std::string& textureKey, float radius)
     : m_controller(controller), m_lifeTimer(5.f) {
-    // Base constructor
 }
 
 void Projectile::update(sf::Time deltaTime) {
@@ -17,13 +16,10 @@ void Projectile::render(sf::RenderWindow& window) {
 }
 
 void Projectile::hit() {
-    // הוספת בדיקה למניעת קריאות כפולות (מומלץ)
     if (m_isDead) return;
 
-    m_isDead = true; //
+    m_isDead = true; 
 
-    // --- הוסף את השורה הבאה ---
-    // זה יסמן לבקר המשחק לסיים את התור בפריים הבא
     m_controller.requestEndTurn();
 }
 

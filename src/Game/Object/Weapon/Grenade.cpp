@@ -8,8 +8,7 @@
 
 namespace {
     const float FIRE_POWER = 20.f;
-    // äâãìðå àú äîøç÷ ääúçìúé ùì ä÷ìéò ì-40 ôé÷ñìéí (áî÷åí 30)
-    const float SPAWN_OFFSET = 40.f;
+    const float SPAWN_OFFSET = 30.f;
 }
 
 Grenade::Grenade()
@@ -31,8 +30,6 @@ void Grenade::handleInput(const sf::Event& event, Worm& worm) {
         if (event.mouseButton.button == sf::Mouse::Left) {
             fire(worm);
             worm.setState(std::make_unique<WormIdleState>());
-			// >>> סיום תור אחרי שימוש בנשק:
-			//worm.getGameController().endTurn();
         }
     }
 }
@@ -55,7 +52,6 @@ void Grenade::fire(Worm& worm) {
     if (length == 0) return;
     dir /= length;
       
-    // éåöøéí àú ä÷ìéò áîé÷åí çãù åîøåç÷ éåúø
     sf::Vector2f startPos = wormPos + dir * SPAWN_OFFSET;
 
     auto shell = std::make_unique<GrenadeShell>(controller, controller.getWorld(), startPos);

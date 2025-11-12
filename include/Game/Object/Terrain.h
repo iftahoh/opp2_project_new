@@ -1,8 +1,12 @@
-﻿// include/GameObjects/Terrain.h
-#pragma once
+﻿#pragma once
+
 #include "Game/Object/StaticObject.h"
 #include <vector>
 #include <box2d/b2_math.h>
+
+/*
+* Terrain class representing the terrain in the game.
+*/
 
 class Terrain : public StaticObject {
 public:

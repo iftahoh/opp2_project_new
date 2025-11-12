@@ -10,7 +10,6 @@
 #include "ResourceGraphic.h"
 #include "AudioManager.h"
 
-// ááðàé, ðèòï ø÷ îùàáéí åðàôñ àú äãâì
 MainMenuScreenState::MainMenuScreenState() : m_isPositionsSet(false) {
 	try {
 		font = ResourceGraphic::getInstance().getFont("main_font");
@@ -20,29 +19,21 @@ MainMenuScreenState::MainMenuScreenState() : m_isPositionsSet(false) {
 		std::cerr << "Error: " << e.what() << std::endl;
 	}
 
-	// äâãøåú øàùåðéåú ììà îé÷åí
 	background.setTexture(backgroundTexture);
-	
 }
 
-// ôåð÷öééú äòæø äçãùä ùîîøëæú äëì
 void MainMenuScreenState::setupPositions(sf::RenderWindow& window) {
 	sf::Vector2f windowSize(window.getSize());
 	float centerX = windowSize.x / 2.f;
 
-	// îøëåæ äø÷ò
 	background.setScale(
 		windowSize.x / background.getLocalBounds().width,
 		windowSize.y / background.getLocalBounds().height
 	);
 
-	
-
-	// äâãøåú ëììéåú ìëôúåøéí
 	sf::Vector2f buttonSize(250.f, 50.f);
 	float buttonX = centerX - (buttonSize.x / 2.f);
 
-	// îé÷åí äëôúåøéí
 	startGameButton.setup(L"Start Game", font, { buttonX, windowSize.y * 0.40f }, buttonSize);
 	startGameButton.setCommand(std::make_unique<StartGameCommand>(window));
 
@@ -58,11 +49,10 @@ void MainMenuScreenState::setupPositions(sf::RenderWindow& window) {
 
 void MainMenuScreenState::render(sf::RenderWindow& window) {
 	if (!m_isPositionsSet) {
-		setupPositions(window); // òëùéå ä÷øéàä ú÷éðä
+		setupPositions(window);
 		m_isPositionsSet = true;
 	}
 	AudioManager::getInstance().playMusic("menu_music");
-	// òëùéå ðöééø äëì
 	window.draw(background);
 	startGameButton.render(window);
 	settingsButton.render(window);

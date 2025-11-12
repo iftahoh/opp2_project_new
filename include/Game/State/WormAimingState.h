@@ -1,7 +1,12 @@
-#pragma once
+﻿#pragma once
+
 #include "Game/State/IWormState.h"
 #include "Game/Object/Weapon/IWeapon.h"
 #include <memory>
+
+/*
+WormAimingState class representing the aiming state of a worm.
+*/
 
 class WormAimingState : public IWormState {
 public:

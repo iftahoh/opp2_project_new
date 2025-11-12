@@ -5,6 +5,10 @@
 #include <string>
 #include "Game/Object/Worm.h"
 
+/*
+Player class representing a player in the game.
+*/
+
 class GameController;
 
 class Player {

@@ -2,7 +2,11 @@
 
 #include "MenuScreenState.h"
 #include "Button.h"
-#include <SFML/Graphics/Text.hpp> // הוספת ה-include הדרוש לטקסט
+#include <SFML/Graphics/Text.hpp>
+
+/*
+SettingsState class representing the settings menu screen.
+*/
 
 class SettingsState : public MenuScreenState {
 public:

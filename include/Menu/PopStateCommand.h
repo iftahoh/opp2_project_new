@@ -1,7 +1,11 @@
-#pragma once
+﻿#pragma once
 
 #include "ICommand.h"
 #include "MenuManager.h"
+
+/*
+PopStateCommand class that implements the ICommand interface
+*/
 
 class PopStateCommand : public ICommand {
 public:

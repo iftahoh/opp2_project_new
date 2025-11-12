@@ -1,10 +1,14 @@
-#pragma once
+﻿#pragma once
 
 #include <SFML/Graphics.hpp>
 #include <memory>
 #include <string>
 #include <functional>
 #include <Menu/ICommand.h>
+
+/*
+* Button class representing a clickable button in the menu system.
+*/
 
 class Button {
 public:

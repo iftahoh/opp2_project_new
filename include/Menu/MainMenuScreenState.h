@@ -1,8 +1,12 @@
-#pragma once
+ן»¿#pragma once
 
 #include "MenuScreenState.h"
 #include <SFML/Graphics.hpp>
 #include "Button.h" 
+
+/*
+MainMenuScreenState class representing the main menu screen state.
+*/
 
 class MainMenuScreenState : public MenuScreenState {
 public:
@@ -14,8 +18,6 @@ public:
 	void onExit() override;
 
 private:
-	// פונקציית עזר פרטית למיקום האלמנטים
-	// === התיקון כאן: הסרת המילה const ===
 	void setupPositions(sf::RenderWindow& window);
 
 	sf::Font font;

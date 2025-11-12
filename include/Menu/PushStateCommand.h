@@ -1,7 +1,12 @@
-#pragma once
+ן»¿#pragma once
 
 #include "ICommand.h"
 #include "MenuManager.h"
+
+/*
+PushStateCommand class that implements the ICommand interface 
+to push a new menu state onto the MenuManager's state stack.
+*/
 
 template <typename T>
 class PushStateCommand : public ICommand {
@@ -9,8 +14,6 @@ public:
     PushStateCommand(MenuManager& manager) : m_manager(manager) {}
 
     void execute() override {
-        // במקום ליצור את המצב כאן, אנחנו פשוט אומרים למנהל
-        // ליצור ולדחוף מצב מהסוג הרצוי (T)
         m_manager.pushState<T>();
     }
 

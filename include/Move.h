@@ -1,9 +1,11 @@
-#pragma once 
+﻿#pragma once 
 
 #include <SFML/Graphics.hpp>
 #include <memory>
 #include <string>
-
+/*
+Move class in charge of the mouse action in menus.
+*/
 class Move {
 
 public:
@@ -32,7 +34,7 @@ public:
 		m_text.setString(name);
 		m_text.setCharacterSize(30);
 		m_text.setFillColor(m_textColor);
-		m_text.setPosition(position.x + 10, position.y + 10); // Adjust text position within the button
+		m_text.setPosition(position.x + 10, position.y + 10);
 		m_font = font;
 	}
 

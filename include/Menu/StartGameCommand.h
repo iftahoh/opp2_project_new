@@ -4,7 +4,11 @@
 #include <box2D/box2D.h>
 #include <iostream>
 #include <SFML/Graphics.hpp>
-#include "Game/GameController.h" // שונה ל-GameController.h
+#include "Game/GameController.h" 
+
+/*
+StartGameCommand class that implements the ICommand interface to start the game.
+*/
 
 class StartGameCommand : public ICommand {
 public:
@@ -13,8 +17,6 @@ public:
 
     void execute() override {
         std::cout << "Starting the game..." << std::endl;
-
-        // יצירת אובייקט מהמחלקה החדשה
         GameController game(m_window);
         game.run();
     }

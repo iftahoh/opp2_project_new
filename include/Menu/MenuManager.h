@@ -1,11 +1,15 @@
-#pragma once
+ן»¿#pragma once
 
 #include "MenuScreenState.h"
 #include <stack>
 #include <memory>
 #include <type_traits>
 #include <SFML/Audio.hpp>
-#include <SFML/Graphics.hpp> // הוספנו את זה כאן
+#include <SFML/Graphics.hpp>
+
+/*
+MenuManager class that manages the stack of menu screen states.
+*/
 
 class MenuManager {
 public:
@@ -18,13 +22,12 @@ public:
 
         std::unique_ptr<MenuScreenState> newState = std::make_unique<T>();
         if (!m_states.empty()) {
-            // פעולה על המצב הישן
         }
         newState->onEnter(this);
         m_states.push(std::move(newState));
     }
 
-    void popState(); // נשאיר רק הצהרה
+    void popState();
 
     template <typename T>
     void changeState() {
@@ -34,8 +37,8 @@ public:
         pushState<T>();
     }
 
-    void handleInput(sf::Event& event, sf::RenderWindow& window); // נשאיר רק הצהרה
-    void render(sf::RenderWindow& window); // נשאיר רק הצהרה
+    void handleInput(sf::Event& event, sf::RenderWindow& window);
+    void render(sf::RenderWindow& window);
 
     bool isRunning() const;
 

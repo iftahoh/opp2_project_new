@@ -1,15 +1,16 @@
-#pragma once
+ן»¿#pragma once
 
 #include "ICommand.h"
 #include <SFML/Graphics.hpp>
 
-// פקודה זו מקבלת מצביע לחלון כדי שתוכל לסגור אותו
+/*
+* ExitCommand class that implements the ICommand interface to close the application window.
+*/
+
 class ExitCommand : public ICommand {
 public:
-    // הבנאי מקבל את החלון שעליו הוא צריך לפעול
     ExitCommand(sf::RenderWindow& window) : m_window(window) {}
 
-    // הפעולה שמתבצעת היא פשוט לסגור את החלון
     void execute() override {
         m_window.close();
     }

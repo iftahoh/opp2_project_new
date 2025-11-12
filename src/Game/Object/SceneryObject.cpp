@@ -1,6 +1,6 @@
 ﻿#include "Game/Object/SceneryObject.h"
-#include "ResourceGraphic.h" // נשתמש ב-ResourceGraphic לטעינת הטקסטורות
-#include "Game/CollisionCategories.h" // אם נרצה קטגוריות
+#include "ResourceGraphic.h"
+#include "Game/CollisionCategories.h" 
 #include <iostream>
 
 SceneryObject::SceneryObject(b2World& world, const sf::Vector2f& position, const std::string& textureKey)

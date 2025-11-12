@@ -2,7 +2,7 @@
 #include "ResourceGraphic.h"
 #include "Game/CollisionCategories.h"
 #include "Game/Object/DynamicObject.h"
-#include "Game/Object/Worm.h" // חשוב לוודא שקובץ זה כלול
+#include "Game/Object/Worm.h"
 #include <iostream>
 
 // הגדרת רדיוס הפיצוץ במטרים של Box2D (שווה בערך ל-60 פיקסלים)
@@ -129,7 +129,6 @@ void BazookaShell::update(sf::Time deltaTime) {
 
 
 // --- פונקציית הציור ---
-// (הפונקציה נשארת כפי שהייתה אצלך, ללא שינוי)
 void BazookaShell::render(sf::RenderWindow& window) {
     window.draw(m_sprite);
 }

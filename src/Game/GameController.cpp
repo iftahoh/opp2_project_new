@@ -7,7 +7,6 @@
 #include <Menu/SettingsManager.h>
 
 std::uniform_int_distribution<> distrX(1500.f, 2200.f);
-// בקובץ GameController.cpp
 GameController::GameController(sf::RenderWindow& window)
     : m_window(window),
     m_world(b2Vec2(0.0f, 9.8f)), // m_world הוא אכן ה-b2World, מצוין!
@@ -19,12 +18,8 @@ GameController::GameController(sf::RenderWindow& window)
     setupWorld(); // הפונקציה הזו יוצרת את הטריין ושאר האובייקטים
     sf::Vector2u windowSize = m_window.getSize();
 
-    // ===================================================================
-    // קוד חדש ומתוקן שנוסף לבנאי
-    // ===================================================================
-
-    // 3. ניצור את הקירות הפיזיים באמצעות m_world ישירות
-    sf::Vector2f mapSizePixels(windowSize.x * 4, windowSize.y);
+    
+    sf::Vector2f mapSizePixels(windowSize.x * 3, windowSize.y * 1.5);
     const float PIXELS_PER_METER = 30.0f; // ודא שזה יחס ההמרה שלך
     const float mapWidth = mapSizePixels.x / PIXELS_PER_METER;
     const float mapHeight = mapSizePixels.y / PIXELS_PER_METER;
@@ -56,77 +51,57 @@ b2World& GameController::getWorld() {
 }
 
 void GameController::setupWorld() {
-    if (!m_skyTexture.loadFromFile("beach_background.png")) { //
-        std::cerr << "Error loading sky texture" << std::endl; //
+    if (!m_skyTexture.loadFromFile("beach_background.png")) { 
+        std::cerr << "Error loading sky texture" << std::endl;
     }
-    m_skySprite.setTexture(m_skyTexture); //
-    sf::Vector2u windowSize = m_window.getSize(); //
-    sf::Vector2u textureSize = m_skyTexture.getSize(); //
-    m_skySprite.setScale((float)(windowSize.x / textureSize.x), (float)windowSize.y / textureSize.y); //
+    m_skySprite.setTexture(m_skyTexture);
+    sf::Vector2u windowSize = m_window.getSize();
+    sf::Vector2u textureSize = m_skyTexture.getSize();
+    m_skySprite.setScale((float)(windowSize.x / textureSize.x), (float)windowSize.y / textureSize.y);
 
-    // --- התיקון ---
-    // 1. הגדר את גודל עולם המשחק הרצוי. בוא ניצור עולם שרוחבו פי 4 מהחלון.
-    sf::Vector2u worldSize(windowSize.x * 4, windowSize.y); //
-
-    // 2. ניצור את השטח ונשמור מצביע אליו
-    // (חשוב: הוספנו משתנה מקומי m_terrain כדי שנוכל לגשת אליו)
+   
+    sf::Vector2u worldSize(windowSize.x * 3, windowSize.y * 1.5); 
     auto terrainPtr = std::make_unique<Terrain>(m_world, worldSize);
-    Terrain* m_terrain = terrainPtr.get(); // שמירת מצביע "גולמי"
-    addGameObject(std::move(terrainPtr)); // העברת הבעלות ל-m_gameObjects
-
-    // =======================================================
-    // ========= קוד פיזור אובייקטים (עם תיקון Y) =========
-    // =======================================================
+    Terrain* m_terrain = terrainPtr.get();
+    addGameObject(std::move(terrainPtr));
 
     std::random_device rd;
     std::mt19937 gen(rd());
 
-    // הגדרת טווח X
     std::uniform_real_distribution<> distrX(100.f, static_cast<float>(worldSize.x) - 100.f);
 
-    // (מחקנו את distrY)
-
-    // רשימת הטקסטורות
     std::vector<std::string> sceneryKeys = {"texture1", "texture2", "texture3", "texture4", "texture5", "texture6", "texture7"};
 
-    // מספר האובייקטים
     const int numObjectsToSpawn = 15;
 
     std::uniform_int_distribution<> distrIndex(0, sceneryKeys.size() - 1);
 
     // רשימה לבדיקת חפיפות
     std::vector<sf::FloatRect> spawnedObjectBounds;
-    const float PADDING = 20.0f; // מרווח ביטחון
+    const float PADDING = 20.0f;
 
     for (int i = 0; i < numObjectsToSpawn; ++i) {
 
         int retries = 0;
-        const int MAX_RETRIES = 20; // ננסה למצוא מקום פנוי עד 20 פעם
+        const int MAX_RETRIES = 20;
         bool positionFound = false;
 
         while (retries < MAX_RETRIES && !positionFound) {
             retries++;
-
-            // 1. נבחר טקסטורה אקראית ונקבל את הגודל שלה
             std::string randomTextureKey = sceneryKeys[distrIndex(gen)];
             const sf::Texture& texture = ResourceGraphic::getInstance().getTexture(randomTextureKey);
             sf::Vector2u textureSize = texture.getSize();
             float objHeight = static_cast<float>(textureSize.y);
             float objWidth = static_cast<float>(textureSize.x);
 
-            // 2. נבחר X אקראי
             float randomX = distrX(gen);
 
-            // 3. נשאל את ה-Terrain מה גובה הקרקע ב-X הזה
             float groundY = m_terrain->getSurfaceY(randomX);
 
-            // 4. נחשב את ה-Y של מרכז האובייקט
-            // (גובה הקרקע פחות חצי גובה האובייקט)
             float randomY = groundY - (objHeight / 2.f);
 
             sf::Vector2f randomPos(randomX, randomY);
 
-            // 5. ניצור את ה"תיבה החוסמת" (bounding box)
             sf::FloatRect newBounds(
                 randomPos.x - (objWidth / 2.f) - PADDING,
                 randomPos.y - (objHeight / 2.f) - PADDING,
@@ -134,7 +109,6 @@ void GameController::setupWorld() {
                 objHeight + (PADDING * 2)
             );
 
-            // 6. נבדוק אם התיבה החדשה מתנגשת עם תיבות קיימות
             bool isOverlapping = false;
             for (const auto& existingBounds : spawnedObjectBounds) {
                 if (newBounds.intersects(existingBounds)) {
@@ -143,35 +117,28 @@ void GameController::setupWorld() {
                 }
             }
 
-            // 7. אם אין התנגשות - מצאנו מקום!
             if (!isOverlapping) {
                 positionFound = true;
 
-                // ניצור את האובייקט
                 addGameObject(std::make_unique<SceneryObject>(m_world, randomPos, randomTextureKey));
 
-                // ונוסיף את הגבולות שלו לרשימה
                 spawnedObjectBounds.push_back(newBounds);
             }
         }
     }
-    // =======================================================
-    // =================== סוף הקוד החדש ===================
-    // =======================================================
+    
     AudioManager::getInstance().playMusic("game_music");
-	int numOfWorms = SettingsManager::getInstance().getWormsPerPlayer(); //
+	int numOfWorms = SettingsManager::getInstance().getWormsPerPlayer(); 
     //מיקום שחקנים על המפה 
 	float groundX = distrX(gen);
     m_players.push_back(std::make_unique<Player>(m_world, *this, sf::Vector2f(groundX, 300.f), sf::Color::Red, numOfWorms)); //
 	groundX = distrX(gen);
     m_players.push_back(std::make_unique<Player>(m_world, *this, sf::Vector2f(groundX,300.f), sf::Color::Green, numOfWorms)); //
-    std::cout << "Players number " << m_players.size() << std::endl; //
+    std::cout << "Players number " << m_players.size() << std::endl; 
 
-    // --- HUD init (משתמש בפונט info_font מה-ResourceGraphic) --- // NEW
     try {
-        auto& font = ResourceGraphic::getInstance().getFont("main_font"); //
+        auto& font = ResourceGraphic::getInstance().getFont("main_font"); 
         
-        // --- זה הקוד שהיה קיים, אבל עם השם החדש ---
         m_centerHudText.setFont(font);
         m_centerHudText.setCharacterSize(22);
         m_centerHudText.setFillColor(sf::Color::White);
@@ -198,7 +165,7 @@ void GameController::setupWorld() {
         m_hudReady = false; //
     }
 
-    // --- התחלת תור ראשון (טיימר) --- // NEW
+    // --- התחלת תור ראשון (טיימר) ---
     m_currentPlayerIndex = 0; //
     m_turnTimer = m_turnTimeDefault; //
     startTurn(); //
@@ -268,18 +235,12 @@ void GameController::update(sf::Time deltaTime) {
         m_cameraView.setCenter(playerPosition);
     }
 
-    // ===================================================================
-    // =========== כאן נמצא הקוד החדש שהוספנו ============
-    // ===================================================================
-    // הקוד הזה מניח שהוספת את 'm_terrain_ptr' לקובץ ה-header
-    // ואתחלת אותו בבנאי, כפי שהסברתי קודם.
-
     sf::Vector2f center = m_cameraView.getCenter();
     sf::Vector2f halfSize = m_cameraView.getSize() / 2.f;
 
     // קבלת מידות המפה בפיקסלים מהמצביע ששמרנו
     sf::Vector2u windowSize = m_window.getSize();
-    sf::Vector2f mapSizePixels(windowSize.x * 4, windowSize.y);
+    sf::Vector2f mapSizePixels(windowSize.x * 3, windowSize.y * 1.5);
 
     // הגבלת המצלמה לגבולות
     if (center.x - halfSize.x < 0) { center.x = halfSize.x; }
@@ -289,10 +250,6 @@ void GameController::update(sf::Time deltaTime) {
 
     // עדכון סופי של מרכז המצלמה לאחר ההגבלה
     m_cameraView.setCenter(center);
-
-    // ===================================================================
-    // ================= סוף הקוד החדש =================
-    // ===================================================================
 
     m_cameraView.setSize(m_window.getSize().x, m_window.getSize().y);
     checkWinCondition();
@@ -314,7 +271,6 @@ void GameController::update(sf::Time deltaTime) {
 
 void GameController::run() {
     sf::Clock clock;
-    // אם מציק דילוגים כפולים: m_window.setKeyRepeatEnabled(false);
 
     while (m_window.isOpen()) {
         sf::Event event;
@@ -323,10 +279,9 @@ void GameController::run() {
                 m_window.close();
             }
 
-            // Enter מסיים תור ידנית // NEW (אופציונלי)
             if (event.type == sf::Event::KeyPressed && event.key.code == sf::Keyboard::Enter) {
                 endTurn();
-                continue; // לא להעביר ל-Player
+                continue;
             }
 
             if (!m_players.empty()) {
@@ -345,11 +300,9 @@ void GameController::run() {
 }
 
 void GameController::handleEvents() {
-    // This is now handled inside run()
 }
 
 void GameController::render() {
-    // 1. נקה את המסך לצבע רקע בסיסי.
     m_window.clear(sf::Color(135, 206, 235));
 
     // 2. הגדר את המצלמה (View) לעקוב אחרי הדמות.
@@ -471,7 +424,6 @@ void GameController::render() {
     m_window.display();
 }
 
-// ===================== Turn management ===================== // NEW
 
 void GameController::startTurn() {
     if (m_players.empty()) return;

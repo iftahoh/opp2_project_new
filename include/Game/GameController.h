@@ -9,6 +9,10 @@
 #include <string>
 #include "Game/Object/SceneryObject.h"
 
+/*
+GameController class that manages the main game loop, game objects, players, and turn management.
+*/
+
 class GameObject;
 class Player;
 
@@ -55,7 +59,7 @@ private:
     DynamicObject* m_cameraTarget; // <-- המטרה החדשה למעקב
 
 
-    // -------- HUD -------- // NEW
+    // -------- HUD --------
     sf::Text m_centerHudText;       // <-- שם חדש (לטיימר ולתור)
     sf::Text m_player1HealthText; // <-- הוספה
     sf::Text m_player2HealthText; // <-- הוספה

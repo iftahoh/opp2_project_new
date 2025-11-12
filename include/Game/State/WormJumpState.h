@@ -1,7 +1,10 @@
-#pragma once
+﻿#pragma once
 
-#pragma once
 #include "Game/State/IWormState.h"
+
+/*
+WormJumpState class representing the jumping state of a worm.
+*/
 
 class WormJumpState : public IWormState {
 public:

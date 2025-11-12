@@ -1,8 +1,12 @@
-#pragma once
+﻿#pragma once
 
 #include "MenuScreenState.h"
 #include "Button.h"
 #include "Move.h"
+
+/*
+InfoScreenState class representing the information screen state in the menu system.
+*/
 
 class InfoScreenState : public MenuScreenState {
 public:

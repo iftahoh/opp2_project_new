@@ -1,4 +1,4 @@
-#pragma once
+﻿#pragma once
 #include <SFML/Graphics.hpp>
 #include <SFML/Audio.hpp>
 #include <unordered_map>
@@ -7,6 +7,9 @@
 
 #include "Macros.h"
 
+/*
+Manages graphic resources such as textures and fonts using the singleton pattern.
+*/
 class ResourceGraphic
 
 {

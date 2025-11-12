@@ -1,4 +1,8 @@
-#pragma once
+﻿#pragma once
+
+/*
+ICommand interface representing a command in the command pattern.
+*/
 
 class	ICommand {
 public:

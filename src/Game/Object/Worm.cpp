@@ -1,6 +1,4 @@
-﻿// src/Game/Object/Worm.cpp
-
-#include "Game/Object/Worm.h"
+﻿#include "Game/Object/Worm.h"
 #include "Game/State/WormIdleState.h"
 #include "Game/State/WormAimingState.h"
 #include "Game/State/WormGraveState.h"
@@ -12,10 +10,8 @@
 
 namespace {
     const float ANIMATION_SPEED_FPS = 12.0f;
-    // --- äâãøåú çãùåú ìîã äçééí ---
     const sf::Vector2f HEALTH_BAR_SIZE(35.f, 4.f);
-    const float HEALTH_BAR_Y_OFFSET = 20.f; // ëîä âáåä îòì äúåìòú
-    // -----------------------------
+    const float HEALTH_BAR_Y_OFFSET = 20.f;
 }
 
 const sf::Time Worm::ANIMATION_FRAME_DURATION = sf::seconds(1.f / ANIMATION_SPEED_FPS);
@@ -28,9 +24,8 @@ Worm::Worm(b2World& world, GameController& controller, const sf::Vector2f& posit
     m_isFacingRight(true),
     m_jumpsLeft(MAX_JUMPS),
     m_gameController(controller),
-    m_health(MAX_HEALTH) // àúçåì çééí ìî÷ñéîåí
+    m_health(MAX_HEALTH)
 {
-    // ... (èòéðú è÷ñèåøåú åäâãøú àðéîöéåú ðùàø ììà ùéðåé) ...
     if (!m_idleTexture.loadFromFile("wblink1.png")) { std::cerr << "Error loading idle texture" << std::endl; }
     if (!m_walkTexture.loadFromFile("wwalk.png")) { std::cerr << "Error loading walk texture" << std::endl; }
     if (!m_jumpTexture.loadFromFile("wjumpu.png")) { std::cerr << "Error loading jump texture" << std::endl; }
@@ -43,7 +38,6 @@ Worm::Worm(b2World& world, GameController& controller, const sf::Vector2f& posit
     setupAnimations();
     setAnimation("idle");
 
-    // ... (äâãøú äâåó äôéæé÷ìé ðùàø ììà ùéðåé) ...
     b2BodyDef bodyDef;
     bodyDef.type = b2_dynamicBody;
     bodyDef.position.Set(position.x / SCALE, position.y / SCALE);
@@ -51,8 +45,8 @@ Worm::Worm(b2World& world, GameController& controller, const sf::Vector2f& posit
     m_body = world.CreateBody(&bodyDef);
 
     b2PolygonShape shape;
-    float boxWidth = m_animations.at("idle")[0].width / SCALE;
-    float boxHeight = (m_animations.at("idle")[0].height * 0.45) / SCALE;
+    float boxWidth = (m_animations.at("idle")[0].width * 0.47) / SCALE;
+    float boxHeight = (m_animations.at("idle")[0].height * 0.43) / SCALE;
     shape.SetAsBox(boxWidth / 2.0f, boxHeight / 2.0f);
 
     b2FixtureDef fixtureDef;
@@ -66,14 +60,13 @@ Worm::Worm(b2World& world, GameController& controller, const sf::Vector2f& posit
     m_body->GetUserData().pointer = reinterpret_cast<uintptr_t>(this);
     setState(std::make_unique<WormIdleState>());
 
-    // --- äâãøåú øàùåðéåú ìîã äçééí ---
     m_healthBarBackground.setSize(HEALTH_BAR_SIZE);
-    m_healthBarBackground.setFillColor(sf::Color(50, 50, 50)); // ø÷ò àôåø ëää
+    m_healthBarBackground.setFillColor(sf::Color(50, 50, 50));
     m_healthBarBackground.setOrigin(HEALTH_BAR_SIZE.x / 2.f, HEALTH_BAR_SIZE.y / 2.f);
 
     m_healthBarForeground.setSize(HEALTH_BAR_SIZE);
     m_healthBarForeground.setFillColor(color);
-    m_healthBarForeground.setOrigin(0, HEALTH_BAR_SIZE.y / 2.f); // Origin ùîàìé ëãé ùäùéðåé áâåãì ééøàä èåá
+    m_healthBarForeground.setOrigin(0, HEALTH_BAR_SIZE.y / 2.f);
     // ------------------------------------
 }
 
@@ -93,13 +86,11 @@ void Worm::render(sf::RenderWindow& window) {
 
 //------------------------------------------------------------------
 void Worm::update(sf::Time deltaTime) {
-    // --- התיקון המרכזי ---
- // קודם כל, נבדוק אם התולעת סומנה כמתה
     if (isGrave()) { return; }
 
     DynamicObject::update(deltaTime);
     updateAnimation(deltaTime);
-    updateHealthBar(); // ÷øéàä ìòãëåï îã äçééí áëì ôøééí
+    updateHealthBar();
 
     if (isGrounded()) {
         resetJumps();
@@ -121,7 +112,6 @@ void Worm::takeDamage(int amount) {
         m_sprite.setOrigin(m_sprite.getLocalBounds().width / 2.f,
             m_sprite.getLocalBounds().height / 2.f);
 
-        // מעבר ל-GraveState – הוא יטפל בפיזיקה/קוליזיות
         setState(std::make_unique<WormGraveState>());
     }
 
@@ -129,23 +119,15 @@ void Worm::takeDamage(int amount) {
 
 //------------------------------------------------------------------
 void Worm::updateHealthBar() {
-    // îé÷åí îã äçééí îòì ñôøééè äúåìòú
     sf::Vector2f wormPos = m_sprite.getPosition();
     m_healthBarBackground.setPosition(wormPos.x, wormPos.y - HEALTH_BAR_Y_OFFSET);
 
-    // òãëåï àåøê îã äçééí äàãåí áäúàí ìëîåú äçééí
     float healthPercent = static_cast<float>(m_health) / MAX_HEALTH;
     m_healthBarForeground.setSize({ HEALTH_BAR_SIZE.x * healthPercent, HEALTH_BAR_SIZE.y });
 
-    // îé÷åí äîã äàãåí á÷öä äùîàìé ùì äø÷ò ùìå
     m_healthBarForeground.setPosition(m_healthBarBackground.getPosition().x - HEALTH_BAR_SIZE.x / 2.f,
         m_healthBarBackground.getPosition().y);
 }
-
-// ... ùàø äôåð÷öéåú ùì Worm.cpp ðùàøåú ììà ùéðåé ...
-// (canJump, useJump, resetJumps, isGrounded, getGameController, equipWeapon,
-// loadAnimation, frameNumber, setupAnimations, setAnimation, updateAnimation,
-// updateDirection, handlePlayerInput, setState, applyForce, setHorizontalVelocity)
 
 //------------------------------------------------------------------
 bool Worm::canJump() const { return m_jumpsLeft > 0; }
