@@ -11,6 +11,7 @@ class Player {
 public:
  
     Player(b2World& world, GameController& gameController, const sf::Vector2f& basePosition, sf::Color color);
+    Player(b2World& world, GameController& gameController, const sf::Vector2f& basePosition, sf::Color color, int wormNum);
     void handleInput(const sf::Event& event);
     void update(sf::Time deltaTime);
     void render(sf::RenderWindow& window);

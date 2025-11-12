@@ -30,6 +30,25 @@ Player::Player(b2World& world, GameController& gameController, const sf::Vector2
     m_weaponInventory.push_back("Grenade");
 }
 
+Player::Player(b2World& world, GameController& gameController, const sf::Vector2f& basePosition, sf::Color color, int wormNum)
+    : m_currentWormIndex(0), m_gameController(gameController), m_color(color), m_selectedWeaponIndex(0) {
+    for (int i = 0; i < wormNum; ++i) {
+        float randomOffsetX = distrX(gen);
+        sf::Vector2f wormPos = basePosition + sf::Vector2f(randomOffsetX, 0.f);
+
+        const float y_offset = 3.0f * b2_linearSlop * 30.0f;
+        wormPos.y += y_offset;
+
+        auto worm = std::make_unique<Worm>(world, m_gameController, wormPos, m_color);
+
+        m_worms.push_back(worm.get());
+        m_gameController.addGameObject(std::move(worm));
+    }
+
+    m_weaponInventory.push_back("Bazooka");
+    m_weaponInventory.push_back("Grenade");
+}
+
 void Player::handleInput(const sf::Event& event) {
     if (event.type == sf::Event::KeyPressed) {
         // --- עדכון לוגיקה ---
@@ -45,7 +64,7 @@ void Player::handleInput(const sf::Event& event) {
         }
         // (אפשר להוסיף 3, 4 וכו' בהמשך)
 
-        // מקש לציוד הנשק (למשל Tab)
+        // מקש לציוד הנשק (למשל LShift)
         if (event.key.code == sf::Keyboard::LShift) {
             if (m_worms.empty() || m_weaponInventory.empty()) return;
 

@@ -3,6 +3,7 @@
 #include "Game/Player.h"
 #include "ResourceGraphic.h"                 // NEW: כדי להשתמש בפונט הטעון
 #include <iostream>
+#include <Menu/SettingsManager.h>
 
 std::uniform_int_distribution<> distrX(2000.f, 3200.f);
 // בקובץ GameController.cpp
@@ -156,12 +157,12 @@ void GameController::setupWorld() {
     // =======================================================
     // =================== סוף הקוד החדש ===================
     // =======================================================
-
+	int numOfWorms = SettingsManager::getInstance().getWormsPerPlayer(); //
     //מיקום שחקנים על המפה 
 	float groundX = distrX(gen);
-    m_players.push_back(std::make_unique<Player>(m_world, *this, sf::Vector2f(groundX, 500.f), sf::Color::Red)); //
+    m_players.push_back(std::make_unique<Player>(m_world, *this, sf::Vector2f(groundX, 300.f), sf::Color::Red, numOfWorms)); //
 	groundX = distrX(gen);
-    m_players.push_back(std::make_unique<Player>(m_world, *this, sf::Vector2f(groundX, 500.f), sf::Color::Green)); //
+    m_players.push_back(std::make_unique<Player>(m_world, *this, sf::Vector2f(groundX,300.f), sf::Color::Green, numOfWorms)); //
     std::cout << "Players number " << m_players.size() << std::endl; //
 
     // --- HUD init (משתמש בפונט info_font מה-ResourceGraphic) --- // NEW

@@ -1,7 +1,9 @@
 ﻿#include "Menu/SettingsState.h"
 #include "Menu/PopStateCommand.h"
 #include "ResourceGraphic.h"
-#include "Menu/SettingsManager.h" // ודא שהוספת את ה-include הזה
+#include "Menu/SettingsManager.h"
+#include "Menu/IncreaseWormsCommand.h"
+#include "Menu/DecreseWormsCommand.h"// ודא שהוספת את ה-include הזה
 #include <iostream>
 
 SettingsState::SettingsState() : m_isPositionsSet(false) {}
@@ -38,7 +40,9 @@ void SettingsState::setupPositions(const sf::RenderWindow& window) {
 
     // (שאר הקוד שלך נשאר אותו דבר)
     m_wormsDownButton.setup(L"-", m_textFont, { valueX - 50.f, currentY + 10.f }, smallButtonSize);
+	m_wormsDownButton.setCommand(std::make_unique<class DecreseWormsCommand>());
     m_wormsUpButton.setup(L"+", m_textFont, { valueX + 100.f, currentY + 10.f }, smallButtonSize);
+	m_wormsUpButton.setCommand(std::make_unique<class IncreaseWormsCommand>());
 
     sf::Vector2f buttonSize(150.f, 50.f);
     float buttonX = centerX - (buttonSize.x / 2.f);
