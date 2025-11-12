@@ -293,3 +293,9 @@ void Worm::setHorizontalVelocity(float vx) {
 bool Worm::isGrave() const {
     return dynamic_cast<WormGraveState*>(m_state.get()) != nullptr;
 }
+
+//------------------------------------------------------------------
+int Worm::getHealth() const
+{
+    return m_health;
+}

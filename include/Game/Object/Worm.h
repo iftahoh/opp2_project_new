@@ -40,6 +40,7 @@ public:
     void takeDamage(int amount);
     bool isGrave() const;
    
+    int getHealth() const;
 
 
 private:

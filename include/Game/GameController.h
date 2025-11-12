@@ -56,6 +56,13 @@ private:
 
 
     // -------- HUD -------- // NEW
-    sf::Text m_hudText;          // טקסט ל-HUD
+    sf::Text m_centerHudText;       // <-- שם חדש (לטיימר ולתור)
+    sf::Text m_player1HealthText; // <-- הוספה
+    sf::Text m_player2HealthText; // <-- הוספה
+    sf::Text m_weaponHudText;     // <-- הוספה        // טקסט ל-HUD
     bool     m_hudReady = false; // נדע אם הטעינה הצליחה
+
+    void checkWinCondition();    // פונקציית עזר לבדיקת ניצחון
+    bool     m_isGameOver = false; // דגל לציון סיום המשחק
+    sf::Text m_winnerText;     // טקסט להצגת המנצח
 };

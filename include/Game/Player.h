@@ -2,6 +2,7 @@
 
 #include <vector>
 #include <memory>
+#include <string>
 #include "Game/Object/Worm.h"
 
 class GameController;
@@ -15,6 +16,11 @@ public:
     void render(sf::RenderWindow& window);
 	sf::Vector2f getPosition() const;
 
+    int getTotalHealth() const;
+
+    const std::vector<std::string>& getWeaponInventory() const;
+    int getSelectedWeaponIndex() const;
+
 private:
     void nextWorm();
 
@@ -23,4 +29,7 @@ private:
 
     GameController& m_gameController;
 	sf::Color m_color;
+
+    std::vector<std::string> m_weaponInventory; // רשימת הנשקים (לפי שם)
+    int m_selectedWeaponIndex; // האינדקס לנשק שנבחר כרגע
 };

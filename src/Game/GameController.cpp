@@ -10,8 +10,9 @@ GameController::GameController(sf::RenderWindow& window)
     : m_window(window),
     m_world(b2Vec2(0.0f, 9.8f)), // m_world הוא אכן ה-b2World, מצוין!
     m_cameraView(sf::FloatRect(0, 0, window.getSize().x, window.getSize().y)),
-    m_currentPlayerIndex(0), m_cameraTarget(nullptr)
+    m_currentPlayerIndex(0), m_cameraTarget(nullptr), m_isGameOver(false)
 {
+
     m_world.SetContactListener(&m_contactListener);
     setupWorld(); // הפונקציה הזו יוצרת את הטריין ושאר האובייקטים
     sf::Vector2u windowSize = m_window.getSize();
@@ -166,12 +167,28 @@ void GameController::setupWorld() {
     // --- HUD init (משתמש בפונט info_font מה-ResourceGraphic) --- // NEW
     try {
         auto& font = ResourceGraphic::getInstance().getFont("main_font"); //
-        m_hudText.setFont(font); //
-        m_hudText.setCharacterSize(22); //
-        m_hudText.setFillColor(sf::Color::White); //
-        m_hudText.setOutlineColor(sf::Color::Black); //
-        m_hudText.setOutlineThickness(2.f); //
+        
+        // --- זה הקוד שהיה קיים, אבל עם השם החדש ---
+        m_centerHudText.setFont(font);
+        m_centerHudText.setCharacterSize(22);
+        m_centerHudText.setFillColor(sf::Color::White);
+        m_centerHudText.setOutlineColor(sf::Color::Black);
+        m_centerHudText.setOutlineThickness(2.f);
+
+        // --- הוספה: אתחול טקסטים חדשים ---
+        m_player1HealthText = m_centerHudText; // העתקת הגדרות
+        m_player2HealthText = m_centerHudText;
+        m_weaponHudText = m_centerHudText;
+        m_weaponHudText.setCharacterSize(18); // נשקים בקטן יותר
+        // ----------------------------------
+
         m_hudReady = true; //
+
+        m_winnerText.setFont(font);
+        m_winnerText.setCharacterSize(60); // גופן גדול יותר
+        m_winnerText.setFillColor(sf::Color::Yellow);
+        m_winnerText.setOutlineColor(sf::Color::Black);
+        m_winnerText.setOutlineThickness(3.f);
     }
     catch (const std::exception& e) {
         std::cerr << "HUD font load failed: " << e.what() << "\n"; //
@@ -182,6 +199,34 @@ void GameController::setupWorld() {
     m_currentPlayerIndex = 0; //
     m_turnTimer = m_turnTimeDefault; //
     startTurn(); //
+}
+
+void GameController::checkWinCondition()
+{
+    if (m_isGameOver || m_players.size() < 2) {
+        return;
+    }
+
+    // הנחה פשוטה שיש 2 שחקנים (באינדקס 0 ו-1)
+    int player1Health = m_players[0]->getTotalHealth();
+    int player2Health = m_players[1]->getTotalHealth();
+
+    std::string winnerStr;
+
+    if (player1Health <= 0) {
+        winnerStr = "Player 2 Wins!";
+        m_isGameOver = true;
+    }
+    else if (player2Health <= 0) {
+        winnerStr = "Player 1 Wins!";
+        m_isGameOver = true;
+    }
+
+    // אם המשחק נגמר בבדיקה הזו, נכין את טקסט הניצחון
+    if (m_isGameOver) {
+        std::cout << "GAME OVER: " << winnerStr << std::endl;
+        m_winnerText.setString(winnerStr);
+    }
 }
 
 void GameController::update(sf::Time deltaTime) {
@@ -203,6 +248,10 @@ void GameController::update(sf::Time deltaTime) {
             endTurn();
             return; // לא ממשיכים לעדכן בפריים של חילוף תור
         }
+    }
+
+    if (m_isGameOver) {
+        return;
     }
 
     // עדכון כל אובייקטי המשחק
@@ -243,6 +292,7 @@ void GameController::update(sf::Time deltaTime) {
     // ===================================================================
 
     m_cameraView.setSize(m_window.getSize().x, m_window.getSize().y);
+    checkWinCondition();
 
     // כאן אנו מסירים את כל האובייקטים שסומנו כ"מתים"
     m_gameObjects.erase(
@@ -318,16 +368,34 @@ void GameController::render() {
         // נעבור ל-View ברירת מחדל כדי לצייר ביחידות מסך
         sf::View prev = m_window.getView();
         m_window.setView(m_window.getDefaultView());
+        sf::Vector2u win = m_window.getSize();
+        const float topMargin = 6.f;
 
-        // טקסט: "Player X  |  Ys"
+        // --- 5.א: טקסט בריאות (שמאל וימין) ---
+        if (m_players.size() >= 2) {
+            // שחקן 1 (שמאל)
+            int p1Health = m_players[0]->getTotalHealth();
+            m_player1HealthText.setString("P1 Health: " + std::to_string(p1Health));
+            m_player1HealthText.setOrigin(0, 0); // יישור לשמאל-למעלה
+            m_player1HealthText.setPosition(topMargin * 2.f, topMargin * 2.f);
+            m_window.draw(m_player1HealthText);
+
+            // שחקן 2 (ימין)
+            int p2Health = m_players[1]->getTotalHealth();
+            m_player2HealthText.setString("P2 Health: " + std::to_string(p2Health));
+            sf::FloatRect p2b = m_player2HealthText.getLocalBounds();
+            m_player2HealthText.setOrigin(p2b.left + p2b.width, 0); // יישור לימין-למעלה
+            m_player2HealthText.setPosition(win.x - (topMargin * 2.f), topMargin * 2.f);
+            m_window.draw(m_player2HealthText);
+        }
+
+        // --- 5.ב: טקסט מרכזי (טיימר ותור) ---
         int playerNum = m_players.empty() ? 0 : (m_currentPlayerIndex + 1);
         int secsLeft = static_cast<int>(std::ceil(std::max(0.f, m_turnTimer)));
         std::string hudStr = "Player " + std::to_string(playerNum) + "  |  " + std::to_string(secsLeft) + "s";
-        m_hudText.setString(hudStr);
+        m_centerHudText.setString(hudStr); // <-- שינוי שם
 
-        // למקם באמצע-עליון
-        sf::Vector2u win = m_window.getSize();
-        sf::FloatRect tb = m_hudText.getLocalBounds();
+        sf::FloatRect tb = m_centerHudText.getLocalBounds(); // <-- שינוי שם
 
         // רקע חצי-שקוף מאחורי הטקסט
         const float padX = 12.f, padY = 6.f;
@@ -337,18 +405,62 @@ void GameController::render() {
         bg.setOutlineThickness(1.5f);
         bg.setOutlineColor(sf::Color(255, 255, 255, 80));
 
-        // מיושרים לאמצע-עליון
-        m_hudText.setOrigin(tb.left + tb.width / 2.f, tb.top);
+        m_centerHudText.setOrigin(tb.left + tb.width / 2.f, tb.top); // <-- שינוי שם
         bg.setOrigin(bg.getSize().x / 2.f, 0.f);
 
-        const float topMargin = 6.f;
-        m_hudText.setPosition(static_cast<float>(win.x) / 2.f, topMargin + 4.f);
+        m_centerHudText.setPosition(static_cast<float>(win.x) / 2.f, topMargin + 4.f); // <-- שינוי שם
         bg.setPosition(static_cast<float>(win.x) / 2.f, topMargin);
 
         m_window.draw(bg);
-        m_window.draw(m_hudText);
+        m_window.draw(m_centerHudText); // <-- שינוי שם
+
+        // --- 5.ג: טקסט נשקים (מתחת למרכזי) ---
+        if (!m_players.empty()) {
+            Player* activePlayer = m_players[m_currentPlayerIndex].get();
+            const auto& inventory = activePlayer->getWeaponInventory();
+            int selectedIndex = activePlayer->getSelectedWeaponIndex();
+
+            std::string weaponStr;
+            for (int i = 0; i < inventory.size(); ++i) {
+                if (i == selectedIndex) {
+                    weaponStr += " > " + inventory[i] + " < ";
+                }
+                else {
+                    weaponStr += "   " + inventory[i] + "   ";
+                }
+            }
+            m_weaponHudText.setString(weaponStr);
+
+            // מיקום מתחת לרקע של הטיימר
+            sf::FloatRect wpnBounds = m_weaponHudText.getLocalBounds();
+            m_weaponHudText.setOrigin(wpnBounds.left + wpnBounds.width / 2.f, wpnBounds.top);
+            m_weaponHudText.setPosition(static_cast<float>(win.x) / 2.f, topMargin + bg.getSize().y + 5.f);
+
+            m_window.draw(m_weaponHudText);
+        }
 
         // החזרת ה-View הקודם
+        m_window.setView(prev);
+    }
+
+    if (m_isGameOver && m_hudReady) { // m_hudReady מוודא שהפונט נטען
+        // נחזור ל-View הרגיל כדי לצייר על כל המסך
+        sf::View prev = m_window.getView();
+        m_window.setView(m_window.getDefaultView());
+
+        // רקע שחור חצי-שקוף
+        sf::RectangleShape overlay;
+        overlay.setSize(sf::Vector2f(m_window.getSize()));
+        overlay.setFillColor(sf::Color(0, 0, 0, 150));
+        m_window.draw(overlay);
+
+        // טקסט ניצחון ממורכז
+        sf::FloatRect tb = m_winnerText.getLocalBounds();
+        m_winnerText.setOrigin(tb.left + tb.width / 2.f, tb.top + tb.height / 2.f);
+        m_winnerText.setPosition(m_window.getSize().x / 2.f, m_window.getSize().y / 2.f);
+        m_window.draw(m_winnerText);
+
+        // נשחזר את ה-View של המשחק
         m_window.setView(prev);
     }
 
