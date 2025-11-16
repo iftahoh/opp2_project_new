@@ -52,7 +52,9 @@ void MainMenuScreenState::render(sf::RenderWindow& window) {
 		setupPositions(window);
 		m_isPositionsSet = true;
 	}
-	AudioManager::getInstance().playMusic("menu_music");
+	if (AudioManager::getInstance().isMusicPlaying()) {
+		AudioManager::getInstance().playMusic("menu_music");
+	}
 	window.draw(background);
 	startGameButton.render(window);
 	settingsButton.render(window);
@@ -65,12 +67,18 @@ void MainMenuScreenState::handleInput(sf::Event& event, sf::RenderWindow& window
 	settingsButton.handleEvent(event, window);
 	infoButton.handleEvent(event, window);
 	exitGameButton.handleEvent(event, window);
+	if (event.type == sf::Event::KeyPressed && event.key.code == sf::Keyboard::M) {
+		if(AudioManager::getInstance().isMusicPlaying()) {
+			AudioManager::getInstance().stopMusic();
+		} else {
+			AudioManager::getInstance().playMusic("menu_music");
+		}
+	}
 }
 
 void MainMenuScreenState::onEnter(MenuManager* manager) {
-	
+
 	MenuScreenState::onEnter(manager);
-	AudioManager::getInstance().playMusic("menu_music");
 }
 
 void MainMenuScreenState::onExit() {

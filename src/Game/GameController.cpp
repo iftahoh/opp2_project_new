@@ -127,7 +127,9 @@ void GameController::setupWorld() {
         }
     }
     
-    AudioManager::getInstance().playMusic("game_music");
+    if (AudioManager::getInstance().isMusicPlaying()) {
+        AudioManager::getInstance().playMusic("game_music");
+    }
 	int numOfWorms = SettingsManager::getInstance().getWormsPerPlayer(); 
     //מיקום שחקנים על המפה 
 	float groundX = distrX(gen);
@@ -284,9 +286,19 @@ void GameController::run() {
                 continue;
             }
 
+            if (event.type == sf::Event::KeyPressed && event.key.code == sf::Keyboard::M) {
+                if (AudioManager::getInstance().isMusicPlaying()) {
+                    AudioManager::getInstance().stopMusic();
+                }
+                else {
+                    AudioManager::getInstance().playMusic("game_music");
+                }
+            }
+
             if (!m_players.empty()) {
                 m_players[m_currentPlayerIndex]->handleInput(event);
             }
+
         }
 
         if (!m_players.empty()) {

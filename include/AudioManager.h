@@ -19,6 +19,7 @@ public:
     void playMusic(const std::string& name, bool loop = true, float volume = 50.0f);
 
     void stopMusic();
+	bool isMusicPlaying() const { return m_isMusicPlaying; }
 
     AudioManager(const AudioManager&) = delete;
     AudioManager& operator=(const AudioManager&) = delete;
@@ -32,4 +33,5 @@ private:
     sf::Music m_currentMusic;
 
     std::string m_currentMusicName;
+	bool m_isMusicPlaying;
 };

@@ -12,6 +12,7 @@ configure_file ("assets/images/settings_screen.png" ${CMAKE_BINARY_DIR} COPYONLY
 configure_file ("assets/images/wblink1.png" ${CMAKE_BINARY_DIR} COPYONLY)
 configure_file ("assets/images/wjumpu.png" ${CMAKE_BINARY_DIR} COPYONLY)
 configure_file ("assets/images/wbaz.png" ${CMAKE_BINARY_DIR} COPYONLY)
+configure_file ("assets/images/wbazd.png" ${CMAKE_BINARY_DIR} COPYONLY)
 configure_file ("assets/images/wbazlnk.png" ${CMAKE_BINARY_DIR} COPYONLY)
 configure_file ("assets/images/wbazbak.png" ${CMAKE_BINARY_DIR} COPYONLY)
 configure_file ("assets/images/missil.png" ${CMAKE_BINARY_DIR} COPYONLY)

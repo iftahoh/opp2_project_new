@@ -16,6 +16,7 @@ AudioManager::AudioManager() : m_currentMusicName("") {
         std::cerr << "Failed to load music paths: " << e.what() << std::endl;
         
     }
+	m_isMusicPlaying = true;
 }
 
 void AudioManager::loadMusic(const std::string& name, const std::string& filename) {
@@ -26,7 +27,6 @@ void AudioManager::playMusic(const std::string& name, bool loop, float volume) {
     if (m_currentMusicName == name && m_currentMusic.getStatus() == sf::Music::Playing) {
         return;
     }
-
     auto it = m_musicFilepaths.find(name);
     if (it == m_musicFilepaths.end()) {
         std::cerr << "Error: Music track not found: " << name << std::endl;
@@ -44,9 +44,12 @@ void AudioManager::playMusic(const std::string& name, bool loop, float volume) {
     m_currentMusic.play();
 
     m_currentMusicName = name;
+	m_isMusicPlaying = true;
+    
 }
 
 void AudioManager::stopMusic() {
     m_currentMusic.stop();
     m_currentMusicName = "";
+	m_isMusicPlaying = false;
 }
