@@ -294,7 +294,7 @@ void GameController::run() {
                     AudioManager::getInstance().playMusic("game_music");
                 }
             }
-
+           
             if (!m_players.empty()) {
                 m_players[m_currentPlayerIndex]->handleInput(event);
             }
